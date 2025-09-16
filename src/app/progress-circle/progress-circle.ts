@@ -13,13 +13,16 @@ export class ProgressCircle {
   public color = input<string>('#76e5b1');
 
   public circleProgress = computed(() => {
+    if (this.value() > this.maxValue()) {
+      return this.maxValue();
+    }
     const numericValue: number =
       this.FULL_CIRCLE_PROGRESS_VALUE * (1 - this.value() / this.maxValue());
     return `${numericValue}px`;
   });
 
   public textXPosition = computed(() => {
-    const stringValue: string = this.value.toString();
+    const stringValue: string = this.value().toString();
     switch (stringValue.length) {
       case 1:
         return '86px';
@@ -28,7 +31,7 @@ export class ProgressCircle {
       case 3:
         return '59px';
       default:
-        return '86px';
+        return '40px';
     }
   })
 

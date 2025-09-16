@@ -1,3 +1,11 @@
-<button class="px-4 py-2 bg-gradient-to-bl">
-  <i class='bx bx-play-circle'></i>
+<button class="play" (click)="togglePlayPause()">
+  @if (isPlaying) {
+    <i class='bx bx-pause-circle'></i>
+  }
+  @else {
+    <i class='bx bx-play-circle'></i>
+  }
+</button>
+<button>
+  <i class='bx bx-stop-circle'></i>
 </button>

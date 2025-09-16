@@ -6,4 +6,10 @@ import { Component } from '@angular/core';
   templateUrl: './time-controls.html',
   styleUrl: './time-controls.scss',
 })
-export class TimeControls { }
+export class TimeControls {
+  public isPlaying: boolean = false;
+
+  public togglePlayPause(): void {
+    this.isPlaying = !this.isPlaying;
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "Pomodoro by Kiev",
+  "version": "1.0",
+  "description": "Pomodoro's technique for study or work",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "index.html"
+  }
+}

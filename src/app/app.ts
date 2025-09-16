@@ -1,9 +1,9 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
-import { ProgressCircle } from "./progress-circle/progress-circle";
+import { TimerPage } from './pomodoro/pages/timer-page/timer-page';
 
 @Component({
   selector: 'app-root',
-  imports: [ProgressCircle],
+  imports: [TimerPage],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

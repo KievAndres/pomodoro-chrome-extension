@@ -8,6 +8,7 @@ import { Component } from '@angular/core';
 })
 export class TimeControls {
   public isPlaying: boolean = false;
+  // public isPlaying
 
   public togglePlayPause(): void {
     this.isPlaying = !this.isPlaying;

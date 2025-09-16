@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @use 'styles/utilities';
+@use 'styles/fonts';
 
 /*
   Josh's Custom CSS Reset
@@ -21,9 +22,9 @@
 }
 
 body {
+  font-family: 'Fira Sans', system-ui;
   background-color: #141e25;
   color: white;
-  font-family: system-ui;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   display: flex;

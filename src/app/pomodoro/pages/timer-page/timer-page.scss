@@ -2,6 +2,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-image: url('/assets/images/futuristic-city.webp');
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(0, 0, 0, .71);
+  background-blend-mode: multiply;
 
   .progress-circle {
     flex: 1;

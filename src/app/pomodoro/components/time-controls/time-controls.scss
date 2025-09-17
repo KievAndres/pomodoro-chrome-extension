@@ -1,3 +1,27 @@
-button {
-  cursor: pointer;
+.time-controls-container {
+  display: flex;
+  height: 3.1em;
+
+  button {
+    cursor: pointer;
+    flex: 1;
+    font-size: 1em;
+  }
+}
+.play-pause {
+  background: #ff00ff5c;
+  color: white;
+  backdrop-filter: blur(2px);
+
+  &-text {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4em;
+
+    .bx {
+      font-size: 1.3em;
+    }
+  }
 }

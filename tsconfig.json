@@ -16,7 +16,8 @@
     "module": "preserve",
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@enums/*": ["src/app/pomodoro/enums/*"]
     }
   },
   "angularCompilerOptions": {

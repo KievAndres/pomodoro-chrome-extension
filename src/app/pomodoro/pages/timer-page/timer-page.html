@@ -2,6 +2,10 @@
   <section class="header">
     <h2>Pomodoro timer</h2>
   </section>
-  <progress-circle class="progress-circle" [maxValue]=25 [value]=25 />
-  <time-controls class="time-controls" />
+  @if (currentPomodoroStatus === POMODORO_STATUS.IDLE) {
+    <start-focusing-message class="start-focusing-message" (click)="startFocusingSession()" />
+  } @else {
+    <progress-circle class="progress-circle" [maxValue]=25 [value]=25 />
+    <time-controls class="time-controls" />
+  }
 </div>

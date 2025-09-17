@@ -1,11 +1,12 @@
-<button class="btn play" (click)="togglePlayPause()">
-  @if (isPlaying) {
-    <i class='bx bx-pause-circle'></i>
-  }
-  @else {
-    <i class='bx bx-play-circle'></i>
-  }
-</button>
-<button class="btn">
-  <i class='bx bx-stop-circle'></i>
-</button>
+<section class="time-controls-container">
+  <button class="btn play-pause" (click)="togglePlayPause()">
+    @if (isPlaying) {
+    <span class="play-pause-text">Start focusing <i class="bx bx-pause-circle"></i></span>
+    } @else {
+    <span class="play-pause-text">Start focusing <i class="bx bx-play-circle"></i></span>
+    }
+  </button>
+  <button class="btn">
+    <i class="bx bx-stop-circle"></i>
+  </button>
+</section>

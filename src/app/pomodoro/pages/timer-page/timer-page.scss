@@ -27,11 +27,17 @@
         0 0 151px #0fa;
   }
 
+  .start-focusing-message {
+    flex: 1;
+    width: 100%;
+  }
+
   .progress-circle {
     flex: 1;
   }
 
   .time-controls {
     flex: 1;
+    width: 100%;
   }
 }

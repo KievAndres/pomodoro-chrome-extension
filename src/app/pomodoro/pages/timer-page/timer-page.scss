@@ -13,18 +13,48 @@
     font-weight: lighter;
     width: 100%;
     text-align: center;
-    background: rgba(0, 0, 0, .3);
+    // background: rgba(0, 0, 0, .3);
     backdrop-filter: blur(2px);
     color: #fff;
-    text-shadow:
-        0 0 7px #fff,
-        0 0 10px #fff,
-        0 0 21px #fff,
-        0 0 42px #0fa,
-        0 0 82px #0fa,
-        0 0 92px #0fa,
-        0 0 102px #0fa,
-        0 0 151px #0fa;
+    animation: pulse 3s infinite ease-in-out;
+    font-size: .8rem;
+
+    // text-shadow:
+    //     0 0 7px #fff,
+    //     0 0 10px #fff,
+    //     0 0 21px #fff,
+    //     0 0 42px #0fa,
+    //     0 0 82px #0fa,
+    //     0 0 92px #0fa,
+    //     0 0 102px #0fa,
+    //     0 0 151px #0fa;
+
+    @keyframes pulse {
+      0% {
+        // text-shadow: 0 0 7px #fff;
+        text-shadow: none;
+        // font-size: 1em;
+      }
+      50% {
+        // text-shadow:
+        //   0 0 7px #fff,
+        //   0 0 10px #fff,
+        //   0 0 21px #fff,
+        //   0 0 42px #0fa,
+        //   0 0 82px #0fa,
+        //   0 0 92px #0fa,
+        //   0 0 102px #0fa,
+        //   0 0 151px #0fa;
+        // font-size: 2em;;
+        text-shadow: 0 0 7px #fff;
+      }
+      90% {
+        // text-shadow: none;;
+        text-shadow: 0 0 7px #ffffff26;
+        // text-shadow: 0 0 7px #fff;
+
+        }
+    }
   }
 
   .start-focusing-message {

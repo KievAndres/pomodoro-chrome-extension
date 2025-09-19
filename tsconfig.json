@@ -17,7 +17,8 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
-      "@enums/*": ["src/app/pomodoro/enums/*"]
+      "@enums/*": ["src/app/pomodoro/enums/*"],
+      "@shared/*": ["src/app/shared/*"]
     },
     "types": ["chrome"]
   },

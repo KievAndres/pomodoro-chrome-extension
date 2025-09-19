@@ -18,7 +18,8 @@
     "paths": {
       "@/*": ["src/*"],
       "@enums/*": ["src/app/pomodoro/enums/*"]
-    }
+    },
+    "types": ["chrome"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

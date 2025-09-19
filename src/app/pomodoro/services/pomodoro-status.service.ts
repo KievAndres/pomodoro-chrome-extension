@@ -16,6 +16,12 @@ export class PomodoroStatusService {
   }
 
   public setPomodoroStatus(newPomodoroStatus: PomodoroStatus): void {
+    // Guardar el estado en el almacenamiento de Chrome
+    chrome.storage.local.set({ pomodoroStatus: newPomodoroStatus });
     this._$pomodoroStatus.next(newPomodoroStatus);
+  }
+
+  public getPomodoroStatus(): PomodoroStatus {
+    return this._$pomodoroStatus.value;
   }
 }

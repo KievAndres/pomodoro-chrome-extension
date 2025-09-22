@@ -1,3 +1,5 @@
+import './RotatingSphere.css';
+
 export default function RotatingSphere() {
   return (
     <div className="wrap">

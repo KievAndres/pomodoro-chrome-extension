@@ -1,3 +1,4 @@
+import './StartFocusingMessage.css';
 import RotatingSphere from "@shared/components/RotatingSphere/RotatingSphere";
 
 export default function StartFocusingMessage() {

@@ -1,19 +1,19 @@
 import './TimerPage.css';
-// import StartFocusingMessage from '@components/StartFocusingMessage/StartFocusingMessage';
-// import { PomodoroStatus } from '@shared/enums/PomodoroStatus';
+import StartFocusingMessage from '@components/StartFocusingMessage/StartFocusingMessage';
+import { PomodoroStatus } from '@shared/enums/PomodoroStatus';
 import { useState } from 'react';
 
 export default function TimerPage() {
-  // const [currentPomodoroStatus, setCurrentPomodoroStatus] = useState(PomodoroStatus.IDLE);
+  const [currentPomodoroStatus, setCurrentPomodoroStatus] = useState(PomodoroStatus.IDLE);
   return (
     <div className="timer">
     <section className="header">
       <h2>POMODORO TIMER</h2>
     </section>
     {
-      // currentPomodoroStatus === PomodoroStatus.IDLE && 
+      currentPomodoroStatus === PomodoroStatus.IDLE && 
       <div className="start-focusing-message">
-        {/* <StartFocusingMessage /> */}
+        <StartFocusingMessage />
       </div>
     }
     {/* @if (currentPomodoroStatus === POMODORO_STATUS.IDLE) {

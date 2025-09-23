@@ -3,33 +3,31 @@ import { PomodoroState } from "@shared/interfaces/PomodoroState";
 
 export const storageUtils = {
   async savePomodoroState(state: PomodoroState): Promise<void> {
-    // console.log('chrome.storage', chrome, chrome.storage);
     try {
-      // if (chrome?.storage) {
-      //   // await browser.storage.local.set({
-      //   //   [StorageKeys.POMODORO_STATE]: state
-      //   // });
-      //   console.log('browser.storage.local', chrome, chrome.storage);
-        
-      // } else {
-      //   console.log('localStorage', localStorage);
-      //   localStorage.setItem(StorageKeys.POMODORO_STATE, JSON.stringify(state));
-      // }
-      localStorage.setItem(StorageKeys.POMODORO_STATE, JSON.stringify(state));
+      const response = await browser.runtime.sendMessage({
+        action: 'SAVE_POMODORO_STATE',
+        state
+      });
+
+      if (!response.success) {
+        throw new Error(response.error || 'Failed to save pomodoro state');
+      }
     } catch (error) {
       console.error('Error saving pomodoro state:', error);
+      throw error;
     }
   },
 
   async getPomodoroState(): Promise<PomodoroState | null> {
     try {
-      if (browser?.storage) {
-        const result = await browser.storage.local.get(StorageKeys.POMODORO_STATE);
-        return result[StorageKeys.POMODORO_STATE] || null;
-      } else {
-        const stored = localStorage.getItem(StorageKeys.POMODORO_STATE);
-        return stored ? JSON.parse(stored) : null;
+      const response = await browser.runtime.sendMessage({
+        action: 'GET_POMODORO_STATE',
+      });
+
+      if (!response.success) {
+        throw new Error(response.error || 'Failed to get pomodoro state');
       }
+      return response.state;
     } catch (error) {
       console.error('Error getting pomodoro state:', error);
       return null;
@@ -38,13 +36,16 @@ export const storageUtils = {
 
   async clearPomodoroState(): Promise<void> {
     try {
-      if (browser?.storage) {
-        await browser.storage.local.remove(StorageKeys.POMODORO_STATE as string);
-      } else {
-        localStorage.removeItem(StorageKeys.POMODORO_STATE);
+      const response = await browser.runtime.sendMessage({
+        action: 'CLEAR_POMODORO_STATE'
+      });
+
+      if (!response.success) {
+        throw new Error(response.error || 'Failed to clear pomodoro state');
       }
     } catch (error) {
       console.error('Error clearing pomodoro state:', error);
+      throw error;
     }
   }
 }

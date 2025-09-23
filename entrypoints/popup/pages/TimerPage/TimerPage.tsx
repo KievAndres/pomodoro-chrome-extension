@@ -4,6 +4,7 @@ import StartFocusingMessage from "@components/StartFocusingMessage/StartFocusing
 import { PomodoroStatus } from "@shared/enums/PomodoroStatus";
 import { PomodoroState } from "@shared/interfaces/PomodoroState";
 import { storageUtils } from "@shared/utils/storage";
+import ProgressCircle from '@shared/components/ProgressCircle/ProgressCircle';
 
 export default function TimerPage() {
   const [currentPomodoroStatus, setCurrentPomodoroStatus] = useState(
@@ -43,6 +44,10 @@ export default function TimerPage() {
         currentPomodoroStatus === PomodoroStatus.Focus &&
         <div className="focus-session">
           <p>Active session</p>
+          <ProgressCircle
+            value={pomodoroState?.duration}
+            maxValue={pomodoroState?.duration}
+          />
           {/* {pomodoroState && (
             <p>Tiempo restante: {Math.ceil((pomodoroState.duration! - (Date.now() - pomodoroState.startTime!)) / 1000 / 60)} minutos</p>
           )} */}

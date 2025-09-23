@@ -62,25 +62,25 @@ export default function ProgressCircle(props: ProgressCircleProps) {
         cx="100"
         cy="100"
         fill="transparent"
-        stroke-width="16px"
+        strokeWidth="16px"
         stroke={background}
       ></circle>
       <circle
         r="90"
         cx="100"
         cy="100"
-        stroke-width="15"
-        stroke-linecap="round"
+        strokeWidth="15"
+        strokeLinecap="round"
         fill="transparent"
-        stroke-dasharray="565.48px"
-        stroke-dashoffset={circleProgress}
+        strokeDasharray="565.48px"
+        strokeDashoffset={circleProgress}
         stroke={color}
       ></circle>
       <text
         className="circle-text"
         y="117px"
-        font-size="52px"
-        font-weight="bold"
+        fontSize="52px"
+        fontWeight="bold"
         style={{ transform: 'rotate(90deg) translate(0px, -196px)' }}
         fill={color}
         x={textXPosition}

@@ -2,6 +2,15 @@
   transform: rotate(-90deg);
   width: 100%;
 }
+
 .circle-text {
   font-family: system-ui;
+}
+
+.color-transition {
+  transition: stroke 0.9s ease-in-out;
+}
+
+.circle-text {
+  transition: fill 0.9s ease-in-out;
 }

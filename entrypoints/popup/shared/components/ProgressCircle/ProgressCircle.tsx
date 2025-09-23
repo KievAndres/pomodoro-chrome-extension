@@ -1,10 +1,12 @@
 import './ProgressCircle.css';
+import { useState, useEffect } from 'react';
 
 interface ProgressCircleProps {
   background?: string;
   color?: string;
   value?: number;
   maxValue?: number;
+  colorRotation?: boolean;
 }
 
 export default function ProgressCircle(props: ProgressCircleProps) {
@@ -12,11 +14,28 @@ export default function ProgressCircle(props: ProgressCircleProps) {
   const value: number = props.value ?? 0;
   const background: string = props.background || '#e0e0e0';
   const color: string = props.color || '#76e5b1';
+  const colorRotation: boolean = props.colorRotation ?? false;
 
   const FULL_CIRCLE_PROGRESS_VALUE: number = 565;
+  // Se agregan más colores para una transición neón más suave
+  const NEON_COLORS = [
+    '#00ff88', // verde neón
+    '#00ffc3', // verde-azul neón
+    '#00ffff', // cian neón
+    '#00bfff', // azul claro neón
+    '#0080ff', // azul neón
+    '#7f00ff', // violeta neón
+    '#ff00ff', // magenta neón
+    '#ff0080', // rosa neón
+    '#ff0055', // rojo neón
+    '#ff5500', // naranja neón
+    '#ffff00', // amarillo neón
+    '#aaff00', // lima neón
+  ];
 
   const [circleProgress, setCircleProgress] = useState<string>('0px');
   const [textXPosition, setTextXPosition] = useState<string>('0px');
+  const [currentColor, setCurrentColor] = useState<string>(color);
 
   useEffect(() => {
     setCircleProgress(getCircleProgress(value, maxValue));
@@ -26,6 +45,21 @@ export default function ProgressCircle(props: ProgressCircleProps) {
     setTextXPosition(getTextXPosition(value));
   }, [value]);
 
+  useEffect(() => {
+    if (colorRotation) {
+      const interval = setInterval(() => {
+        setCurrentColor(prevColor => {
+          const currentIndex = NEON_COLORS.indexOf(prevColor);
+          const nextIndex = (currentIndex + 1) % NEON_COLORS.length;
+          return NEON_COLORS[nextIndex];
+        });
+      }, 800); // Cambia de color cada 2 segundos
+
+      return () => clearInterval(interval);
+    } else {
+      setCurrentColor(color);
+    }
+  }, [colorRotation, color]);
 
   const getCircleProgress = (value: number, maxValue: number): string => {
     if (value > maxValue) {
@@ -62,7 +96,7 @@ export default function ProgressCircle(props: ProgressCircleProps) {
         cx="100"
         cy="100"
         fill="transparent"
-        strokeWidth="9"
+        strokeWidth="1"
         stroke={background}
       ></circle>
       <circle
@@ -74,7 +108,8 @@ export default function ProgressCircle(props: ProgressCircleProps) {
         fill="transparent"
         strokeDasharray="565.48px"
         strokeDashoffset={circleProgress}
-        stroke={color}
+        stroke={currentColor}
+        className={colorRotation ? 'color-transition' : ''}
       ></circle>
       <text
         className="circle-text"
@@ -82,7 +117,7 @@ export default function ProgressCircle(props: ProgressCircleProps) {
         fontSize="52px"
         fontWeight="bold"
         style={{ transform: 'rotate(90deg) translate(0px, -196px)' }}
-        fill={color}
+        fill={currentColor}
         x={textXPosition}
       >
         {value}

@@ -38,6 +38,7 @@ export default function SessionInProgress() {
       <ProgressCircle
         value={25 - elapsedTime}
         maxValue={25}
+        colorRotation={true}
       />
     </div>
   )

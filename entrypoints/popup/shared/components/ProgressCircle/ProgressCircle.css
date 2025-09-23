@@ -1,7 +1,6 @@
 .progress-circle {
   transform: rotate(-90deg);
   width: 100%;
-  padding: 2em
 }
 .circle-text {
   font-family: system-ui;

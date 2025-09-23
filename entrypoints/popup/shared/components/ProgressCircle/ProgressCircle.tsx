@@ -13,7 +13,7 @@ export default function ProgressCircle(props: ProgressCircleProps) {
   const background: string = props.background || '#e0e0e0';
   const color: string = props.color || '#76e5b1';
 
-  const FULL_CIRCLE_PROGRESS_VALUE: number = 565.48;
+  const FULL_CIRCLE_PROGRESS_VALUE: number = 565;
 
   const [circleProgress, setCircleProgress] = useState<string>('0px');
   const [textXPosition, setTextXPosition] = useState<string>('0px');

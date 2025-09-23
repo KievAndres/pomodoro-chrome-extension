@@ -1,11 +1,11 @@
-import { StorageKeys } from "@shared/enums/StorageKeys"
+import { StorageActions } from "@shared/enums/StorageActions";
 import { PomodoroState } from "@shared/interfaces/PomodoroState";
 
 export const storageUtils = {
   async savePomodoroState(state: PomodoroState): Promise<void> {
     try {
       const response = await browser.runtime.sendMessage({
-        action: 'SAVE_POMODORO_STATE',
+        action: StorageActions.SavePomodoroState,
         state
       });
 
@@ -21,7 +21,7 @@ export const storageUtils = {
   async getPomodoroState(): Promise<PomodoroState | null> {
     try {
       const response = await browser.runtime.sendMessage({
-        action: 'GET_POMODORO_STATE',
+        action: StorageActions.GetPomodoroState,
       });
 
       if (!response.success) {
@@ -37,7 +37,7 @@ export const storageUtils = {
   async clearPomodoroState(): Promise<void> {
     try {
       const response = await browser.runtime.sendMessage({
-        action: 'CLEAR_POMODORO_STATE'
+        action: StorageActions.ClearPomodoroState
       });
 
       if (!response.success) {

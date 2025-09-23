@@ -33,7 +33,7 @@ export default defineBackground(() => {
       console.log('saving...', state);
       
       await browser.storage.local.set({
-        [StorageKeys.POMODORO_STATE]: state
+        [StorageKeys.PomodoroState]: state
       });
     } catch (error) {
       console.error('Error saving pomodoro state:', error);
@@ -43,8 +43,8 @@ export default defineBackground(() => {
 
   async function getPomodoroState(): Promise<PomodoroState | null> {
     try {
-      const result = await browser.storage.local.get(StorageKeys.POMODORO_STATE);
-      return result[StorageKeys.POMODORO_STATE] || null;
+      const result = await browser.storage.local.get(StorageKeys.PomodoroState);
+      return result[StorageKeys.PomodoroState] || null;
     } catch (error) {
       console.error('Error getting pomodoro state:', error);
       throw error;
@@ -53,7 +53,7 @@ export default defineBackground(() => {
 
   async function clearPomodoroState(): Promise<void> {
     try {
-      await browser.storage.local.remove(StorageKeys.POMODORO_STATE as string);
+      await browser.storage.local.remove(StorageKeys.PomodoroState as string);
     } catch (error) {
       console.error('Error clearing pomodoro state:', error);
       throw error;

@@ -1,26 +1,58 @@
 import './TimerPage.css';
-import StartFocusingMessage from '@components/StartFocusingMessage/StartFocusingMessage';
-import { PomodoroStatus } from '@shared/enums/PomodoroStatus';
-import { useState } from 'react';
+import StartFocusingMessage from "@components/StartFocusingMessage/StartFocusingMessage";
+import { PomodoroStatus } from "@shared/enums/PomodoroStatus";
+import { PomodoroState } from "@shared/interfaces/PomodoroState";
+import { storageUtils } from "@shared/utils/storage";
 
 export default function TimerPage() {
-  const [currentPomodoroStatus, setCurrentPomodoroStatus] = useState(PomodoroStatus.IDLE);
+  const [currentPomodoroStatus, setCurrentPomodoroStatus] = useState(
+    PomodoroStatus.IDLE
+  );
+  const [pomodoroState, setPomodoroState] = useState<PomodoroState | null>(null);
+
+  useEffect(() => {
+    const loadInitialState = async () => {
+      const storagePomodoroState = await storageUtils.getPomodoroState();
+      if (storagePomodoroState) {
+        setPomodoroState(storagePomodoroState);
+        setCurrentPomodoroStatus(storagePomodoroState.status);
+      }
+    };
+
+    loadInitialState();
+  });
+
+  const handleStartFocusing = async () => {
+    const state = await storageUtils.getPomodoroState();
+    if (state) {
+      setPomodoroState(state);
+      setCurrentPomodoroStatus(state.status);
+    }
+  }
+
   return (
     <div className="timer">
-    <section className="header">
-      <h2>POMODORO TIMER</h2>
-    </section>
-    {
-      currentPomodoroStatus === PomodoroStatus.IDLE && 
-      <div className="start-focusing-message">
-        <StartFocusingMessage />
-      </div>
-    }
-    {/* @if (currentPomodoroStatus === POMODORO_STATUS.IDLE) {
-      <start-focusing-message className="start-focusing-message" (click)="startFocusingSession()" />
-    } @else {
-      <progress-circle className="progress-circle" [maxValue]=25 [value]=25 />
-    } */}
-  </div>
+      <section className="header">
+        <h2>POMODORO TIMER</h2>
+      </section>
+      {currentPomodoroStatus === PomodoroStatus.IDLE && (
+        <div>
+          <StartFocusingMessage
+            onStartFocusing={() =>
+              setCurrentPomodoroStatus(PomodoroStatus.FOCUS)
+            }
+          />
+        </div>
+      )}
+      {
+        currentPomodoroStatus === PomodoroStatus.FOCUS &&
+        <div className="focus-session">
+          <p>Active session</p>
+          {/* {pomodoroState && (
+            <p>Tiempo restante: {Math.ceil((pomodoroState.duration! - (Date.now() - pomodoroState.startTime!)) / 1000 / 60)} minutos</p>
+          )} */}
+        </div>
+      }
+    </div>
   );
 }

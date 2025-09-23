@@ -7,7 +7,7 @@ import { storageUtils } from "@shared/utils/storage";
 
 export default function TimerPage() {
   const [currentPomodoroStatus, setCurrentPomodoroStatus] = useState(
-    PomodoroStatus.IDLE
+    PomodoroStatus.Idle
   );
   const [pomodoroState, setPomodoroState] = useState<PomodoroState | null>(null);
 
@@ -24,7 +24,7 @@ export default function TimerPage() {
   }, []);
 
   const handleStartFocusing = async () => {
-    setCurrentPomodoroStatus(PomodoroStatus.FOCUS);
+    setCurrentPomodoroStatus(PomodoroStatus.Focus);
   }
 
   return (
@@ -32,7 +32,7 @@ export default function TimerPage() {
       <section className="header">
         <h2>POMODORO TIMER</h2>
       </section>
-      {currentPomodoroStatus === PomodoroStatus.IDLE && (
+      {currentPomodoroStatus === PomodoroStatus.Idle && (
         <div>
           <StartFocusingMessage
             onStartFocusing={handleStartFocusing}
@@ -40,7 +40,7 @@ export default function TimerPage() {
         </div>
       )}
       {
-        currentPomodoroStatus === PomodoroStatus.FOCUS &&
+        currentPomodoroStatus === PomodoroStatus.Focus &&
         <div className="focus-session">
           <p>Active session</p>
           {/* {pomodoroState && (

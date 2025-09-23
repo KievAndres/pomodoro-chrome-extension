@@ -8,7 +8,7 @@ export default function StartFocusingMessage({ onStartFocusing }: StartFocusingM
   const handleStartFocusing = async () => {
     try {
       await storageUtils.savePomodoroState({
-        status: PomodoroStatus.FOCUS,
+        status: PomodoroStatus.Focus,
         startTime: Date.now(),
         duration: 25 * 60 * 1000
       });

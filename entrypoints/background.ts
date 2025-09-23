@@ -1,22 +1,24 @@
+import { StorageActions } from "@shared/enums/StorageActions";
 import { StorageKeys } from "@shared/enums/StorageKeys";
 import { PomodoroState } from "@shared/interfaces/PomodoroState";
 
 export default defineBackground(() => {
+  const { SavePomodoroState, GetPomodoroState, ClearPomodoroState } = StorageActions;
   browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log('message', message);
 
     switch (message.action) {
-      case 'SAVE_POMODORO_STATE':
+      case SavePomodoroState:
         savePomodoroState(message.state)
           .then(() => sendResponse({ success: true}))
           .catch((error) => sendResponse({ success: false, error: error.message }));
         return true;
-      case 'GET_POMODORO_STATE':
+      case GetPomodoroState:
         getPomodoroState()
           .then(state => sendResponse({ success: true, state }))
           .catch(error => sendResponse({ success: false, error: error.message }))
         return true;
-      case 'CLEAR_POMODORO_STATE':
+      case ClearPomodoroState:
         clearPomodoroState()
           .then(() => sendResponse({ success: true}))
           .catch(error => sendResponse({ success: false, error: error.message }))
@@ -28,6 +30,8 @@ export default defineBackground(() => {
 
   async function savePomodoroState(state: PomodoroState): Promise<void> {
     try {
+      console.log('saving...', state);
+      
       await browser.storage.local.set({
         [StorageKeys.POMODORO_STATE]: state
       });

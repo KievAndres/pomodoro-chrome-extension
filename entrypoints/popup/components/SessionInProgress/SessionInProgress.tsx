@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import ProgressCircle from "@shared/components/ProgressCircle/ProgressCircle";
 import { usePomodoroConfig } from "@shared/hooks/usePomodoroConfig";
 import { PomodoroState } from "@shared/interfaces/PomodoroState";

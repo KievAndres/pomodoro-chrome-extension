@@ -8,7 +8,9 @@ import SessionInProgress from '@components/SessionInProgress/SessionInProgress';
 import { usePomodoroConfig } from '@shared/hooks/usePomodoroConfig';
 
 export default function TimerPage() {
-  const [pomodoroState, setPomodoroState] = useState<PomodoroState | null>(null);
+  const [pomodoroState, setPomodoroState] = useState<PomodoroState | null>({
+    status: PomodoroStatus.Idle
+  });
   const { config } = usePomodoroConfig();
 
   useEffect(() => {
@@ -22,11 +24,11 @@ export default function TimerPage() {
     loadInitialState();
   }, []);
 
-  // useEffect(() => {
-  //   if (!pomodoroState) return;
+  useEffect(() => {
+    if (!pomodoroState) return;
 
-  //   storageUtils.savePomodoroState(pomodoroState);
-  // }, [pomodoroState]);
+    storageUtils.savePomodoroState(pomodoroState);
+  }, [pomodoroState]);
 
   const handleStartFocusing = async () => {
     setPomodoroState({
@@ -47,23 +49,23 @@ export default function TimerPage() {
         });
         break;
     }
-
-    return (
-      <div className="timer">
-        <section className="header">
-          <h2>POMODORO TIMER</h2>
-        </section>
-        {/* {pomodoroState?.status === PomodoroStatus.Idle && (
-          <div>
-            <StartFocusingMessage onStartFocusing={handleStartFocusing} />
-          </div>
-        )}
-        {pomodoroState?.status === PomodoroStatus.Focus && (
-          <div className="focus-session">
-            <SessionInProgress onComplete={handleCompleteSession} />
-          </div>
-        )} */}
-      </div>
-    );
   };
+
+  return (
+    <div className="timer">
+      <section className="header">
+        <h2>POMODORO TIMER</h2>
+      </section>
+      {pomodoroState?.status === PomodoroStatus.Idle && (
+        <div>
+          <StartFocusingMessage onStartFocusing={handleStartFocusing} />
+        </div>
+      )}
+      {pomodoroState?.status === PomodoroStatus.Focus && (
+        <div className="focus-session">
+          <SessionInProgress onComplete={handleCompleteSession} />
+        </div>
+      )}
+    </div>
+  );
 }

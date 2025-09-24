@@ -23,8 +23,10 @@ export default function SessionInProgress() {
     const updateElapsedTime = () => {
       const now = Date.now();
       const elapsed = now - pomodoroState.startTime!;
-      const elpasedMinutes = Math.floor(elapsed / (1000 * 60));
-      console.log(elpasedMinutes, pomodoroState);
+      let elpasedMinutes = Math.floor(elapsed / (1000 * 60));
+      if (elpasedMinutes >= config.focusDuration) {
+        elpasedMinutes = config.focusDuration;
+      }
       setElapsedTime(elpasedMinutes);
     };
 

@@ -1,23 +1,12 @@
 import './StartFocusingMessage.css';
-import RotatingSphere from "@shared/components/RotatingSphere/RotatingSphere";
-import { PomodoroStatus } from '@shared/enums/PomodoroStatus';
-import { storageUtils } from '@shared/utils/storage';
+import RotatingSphere from '@shared/components/RotatingSphere/RotatingSphere';
 import { StartFocusingMessageProps } from './StartFocusingMessageProps';
+import { usePomodoroConfig } from '@shared/hooks/usePomodoroConfig';
 
 export default function StartFocusingMessage({ onStartFocusing }: StartFocusingMessageProps) {
   const handleStartFocusing = async () => {
-    try {
-      await storageUtils.savePomodoroState({
-        status: PomodoroStatus.Focus,
-        startTime: Date.now(),
-        duration: 25 * 60 * 1000
-      });
-
-      onStartFocusing?.();
-    } catch (error) {
-      console.error('Error starting focus session:', error)
-    }
-  }
+    onStartFocusing?.();
+  };
 
   return (
     <section className="start-focusing-container" onClick={handleStartFocusing}>

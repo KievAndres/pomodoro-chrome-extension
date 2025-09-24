@@ -1,3 +1,5 @@
 export enum StorageKeys {
-  PomodoroState = 'pomodoroState'
+  PomodoroState = 'pomodoroState',
+  PomodoroConfig = 'pomodoroConfig',
+  UserPreferences = 'userPreferences',
 }

@@ -1,10 +1,12 @@
 import ProgressCircle from "@shared/components/ProgressCircle/ProgressCircle";
+import { usePomodoroConfig } from "@shared/hooks/usePomodoroConfig";
 import { PomodoroState } from "@shared/interfaces/PomodoroState";
 import { storageUtils } from "@shared/utils/storage";
 
 export default function SessionInProgress() {
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [pomodoroState, setPomodoroState] = useState<PomodoroState | null>(null);
+  const {config} = usePomodoroConfig();
 
   useEffect(() => {
     const loadInitialState = async () => {
@@ -36,8 +38,8 @@ export default function SessionInProgress() {
   return (
     <div className="session-in-progress">
       <ProgressCircle
-        value={25 - elapsedTime}
-        maxValue={25}
+        value={config.focusDuration - elapsedTime}
+        maxValue={config.focusDuration}
         colorRotation={true}
       />
     </div>

@@ -1,8 +1,9 @@
+import { DEFAULT_POMODORO_CONFIG } from '@shared/config/defaults';
 import { PomodoroConfig } from '@shared/interfaces/PomodoroConfig';
 import { configUtils } from '@shared/utils/config';
 import { useEffect } from 'react';
 export const usePomodoroConfig = () => {
-  const [config, setConfig] = useState<PomodoroConfig | null>(null);
+  const [config, setConfig] = useState<PomodoroConfig>(DEFAULT_POMODORO_CONFIG);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

@@ -53,7 +53,7 @@ export default function ProgressCircle(props: ProgressCircleProps) {
           const nextIndex = (currentIndex + 1) % NEON_COLORS.length;
           return NEON_COLORS[nextIndex];
         });
-      }, 800); // Cambia de color cada 2 segundos
+      }, 1000);
 
       return () => clearInterval(interval);
     } else {

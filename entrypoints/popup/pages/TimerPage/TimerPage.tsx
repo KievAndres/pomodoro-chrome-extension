@@ -8,14 +8,13 @@ import SessionInProgress from '@components/SessionInProgress/SessionInProgress';
 import { usePomodoroConfig } from '@shared/hooks/usePomodoroConfig';
 
 export default function TimerPage() {
-  const [pomodoroState, setPomodoroState] = useState<PomodoroState | null>({
-    status: PomodoroStatus.Idle
-  });
+  const [pomodoroState, setPomodoroState] = useState<PomodoroState | null>(null);
   const { config } = usePomodoroConfig();
 
   useEffect(() => {
     const loadInitialState = async () => {
       const storagePomodoroState = await storageUtils.getPomodoroState();
+      console.log(storagePomodoroState);
       if (storagePomodoroState) {
         setPomodoroState(storagePomodoroState);
       }

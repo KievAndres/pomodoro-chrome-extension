@@ -42,6 +42,7 @@ export default function ProgressCircle(props: ProgressCircleProps) {
         fill="transparent"
         strokeDasharray={strokeDashArray}
         strokeDashoffset={storkeDashOffset}
+        transform="rotate(-90 20 20)"
       ></circle>
 
       <g className="progress-text">
@@ -52,7 +53,7 @@ export default function ProgressCircle(props: ProgressCircleProps) {
         </text>
         <text y="60%" transform="translate(0,2)" fill="url(#textGradient)">
           <tspan x="50%" textAnchor="middle" className="progress-name">
-            Focus time
+            Focus
           </tspan>
         </text>
       </g>

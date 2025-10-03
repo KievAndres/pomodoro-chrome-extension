@@ -13,11 +13,13 @@
   font-size: 0.7em;
   font-family: Trebuchet MS, sans-serif;
   font-weight: bold;
+  /* fill: #fc466b; */
 }
 
 .progress-percent {
   animation: textGlow 2s ease-in-out infinite alternate;
   transition: .2s ease-in-out;
+  /* fill: #fc466b; */
 }
 
 .progress-name {

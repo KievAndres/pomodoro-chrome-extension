@@ -15,15 +15,21 @@
   font-weight: bold;
 }
 
+.progress-percent {
+  fill: #FC466B; /* Rosa vibrante del gradiente */
+  filter: drop-shadow(0.5px 0.5px 1px #fc466b);
+}
+
 .progress-name {
   font-size: 0.3em;
+  fill: #FC466B; /* Azul del gradiente */
 }
 
 @keyframes progressbar {
-  from {
+  /* from {
     stroke-dasharray: 0, 100;
   }
   to {
     stroke-dasharray: 50, 50;
-  }
+  } */
 }

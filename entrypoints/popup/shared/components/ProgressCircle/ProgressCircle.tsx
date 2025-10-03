@@ -86,42 +86,55 @@ export default function ProgressCircle(props: ProgressCircleProps) {
 
   return (
     <svg
-      className="progress-circle"
-      viewBox="0 0 200 200"
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+      xmlns="https://www.w3.org/2000/svg"
+      width="100%"
+      height="100%"
+      viewBox="0 0 40 40">
+      <defs>
+        <linearGradient
+          id="gradient"
+          x1="80%"
+          y1="20%"
+          x2="5%"
+          y2="5%"
+          spreadMethod="pad"
+        >
+          <stop offset="0%" stop-color="#FC466B" />
+          <stop offset="100%" stop-color="#3F5EFB"/>
+        </linearGradient>
+      </defs>
+
       <circle
-        r="90"
-        cx="100"
-        cy="100"
-        fill="transparent"
+        className="rail"
+        cx="20"
+        cy="20"
+        r="16"
         strokeWidth="1"
-        stroke={background}
+        fill="transparent"
       ></circle>
       <circle
-        r="90"
-        cx="100"
-        cy="100"
-        strokeWidth="5"
-        strokeLinecap="round"
+        className="progress"
+        cx="20"
+        cy="20"
+        r="16"
+        strokeWidth="2"
         fill="transparent"
-        strokeDasharray="565.48px"
-        strokeDashoffset={circleProgress}
-        stroke={currentColor}
-        className={colorRotation ? 'color-transition' : ''}
-      ></circle>
-      <text
-        className="circle-text"
-        y="117px"
-        fontSize="52px"
-        fontWeight="bold"
-        style={{ transform: 'rotate(90deg) translate(0px, -196px)' }}
-        fill={currentColor}
-        x={textXPosition}
-      >
-        {value}
-      </text>
+        strokeDasharray="50 50"
+        strokeDashoffset="25">
+      </circle>
+
+      <g className="progress-text">
+        <text
+          y="50%"
+          transform="translate(0,2)">
+            <tspan x="50%" textAnchor="middle" className="progress-percent">50%</tspan>
+        </text>
+        <text y="60%" transform="translate(0,2)">
+          <tspan x="50%" textAnchor="middle" className="progress-name">
+            Entertainment
+          </tspan>
+        </text>
+      </g>
     </svg>
   );
 }

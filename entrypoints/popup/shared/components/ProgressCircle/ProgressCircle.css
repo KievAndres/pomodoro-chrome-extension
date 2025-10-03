@@ -1,16 +1,29 @@
-.progress-circle {
-  transform: rotate(-90deg);
-  width: 100%;
+.rail {
+  stroke: rgba(96, 96, 96, 1);
 }
 
-.circle-text {
-  font-family: system-ui;
+.progress {
+  stroke: url(#gradient);
+  filter: drop-shadow(0.5px 0.5px 1px #fc466b);
+  stroke-linecap: round;
+  animation: progressbar 10s;
 }
 
-.color-transition {
-  transition: stroke 0.9s ease;
+.progress-text {
+  font-size: 0.7em;
+  font-family: Trebuchet MS, sans-serif;
+  font-weight: bold;
 }
 
-.circle-text {
-  transition: fill 0.9s ease;
+.progress-name {
+  font-size: 0.3em;
+}
+
+@keyframes progressbar {
+  from {
+    stroke-dasharray: 0, 100;
+  }
+  to {
+    stroke-dasharray: 50, 50;
+  }
 }

@@ -16,13 +16,23 @@
 }
 
 .progress-percent {
-  fill: #FC466B; /* Rosa vibrante del gradiente */
-  filter: drop-shadow(0.5px 0.5px 1px #fc466b);
+  /* El color ahora viene del gradiente SVG */
+  animation: textGlow 2s ease-in-out infinite alternate;
 }
 
 .progress-name {
   font-size: 0.3em;
-  fill: #FC466B; /* Azul del gradiente */
+  /* El color ahora viene del gradiente SVG */
+  animation: textGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes textGlow {
+  0% {
+    filter: drop-shadow(0 0 2px #FC466B);
+  }
+  100% {
+    filter: drop-shadow(0 0 8px #3F5EFB);
+  }
 }
 
 @keyframes progressbar {

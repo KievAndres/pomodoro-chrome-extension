@@ -13,10 +13,14 @@ export default function TimerPage() {
 
   useEffect(() => {
     const loadInitialState = async () => {
-      const storagePomodoroState = await storageUtils.getPomodoroState();
-      console.log(storagePomodoroState);
-      if (storagePomodoroState) {
-        setPomodoroState(storagePomodoroState);
+      const storedPomodoroState = await storageUtils.getPomodoroState();
+      console.log(storedPomodoroState);
+      if (storedPomodoroState) {
+        setPomodoroState(storedPomodoroState);
+      } else {
+        setPomodoroState({
+          status: PomodoroStatus.Idle,
+        });
       }
     };
 

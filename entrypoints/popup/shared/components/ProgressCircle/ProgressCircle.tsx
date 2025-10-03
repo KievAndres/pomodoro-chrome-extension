@@ -22,13 +22,13 @@ export default function ProgressCircle(props: ProgressCircleProps) {
     <svg xmlns="https://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 40 40">
       <defs>
         <linearGradient id="gradient" x1="80%" y1="20%" x2="5%" y2="5%" spreadMethod="pad">
-          <stop offset="0%" stop-color="#FC466B" />
-          <stop offset="100%" stop-color="#3F5EFB" />
+          <stop offset="0%" stop-color="#FC466B" className="stop1" />
+          <stop offset="100%" stop-color="#3F5EFB" className="stop2" />
         </linearGradient>
 
         <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#FC466B" />
-          <stop offset="100%" stop-color="#3F5EFB" />
+          <stop offset="0%" stop-color="#FC466B" className="stop1" />
+          <stop offset="100%" stop-color="#3F5EFB" className="stop2" />
         </linearGradient>
       </defs>
 

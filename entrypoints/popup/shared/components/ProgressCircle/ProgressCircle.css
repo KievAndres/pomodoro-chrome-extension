@@ -7,19 +7,18 @@
   filter: drop-shadow(0.5px 0.5px 1px #fc466b);
   stroke-linecap: round;
   transition: .2s ease-in-out;
+  /* animation: gradientRotate 3s linear infinite; */
 }
 
 .progress-text {
   font-size: 0.7em;
   font-family: Trebuchet MS, sans-serif;
   font-weight: bold;
-  /* fill: #fc466b; */
 }
 
 .progress-percent {
   animation: textGlow 2s ease-in-out infinite alternate;
   transition: .2s ease-in-out;
-  /* fill: #fc466b; */
 }
 
 .progress-name {
@@ -34,4 +33,36 @@
   100% {
     filter: drop-shadow(0 0 8px #3F5EFB);
   }
+}
+
+@keyframes gradientRotate {
+  0% {
+    transform: rotate(-90deg);
+  }
+  100% {
+    transform: rotate(270deg);
+  }
+}
+
+/* Animación para los colores del gradiente */
+.stop1 {
+  animation: colorShift1 10s ease-in-out infinite;
+}
+
+.stop2 {
+  animation: colorShift2 10s ease-in-out infinite;
+}
+
+@keyframes colorShift1 {
+  0%, 100% { stop-color: #FC466B; }
+  25% { stop-color: #3F5EFB; }
+  50% { stop-color: #00D4AA; }
+  75% { stop-color: #FF6B6B; }
+}
+
+@keyframes colorShift2 {
+  0%, 100% { stop-color: #3F5EFB; }
+  25% { stop-color: #00D4AA; }
+  50% { stop-color: #FF6B6B; }
+  75% { stop-color: #FC466B; }
 }

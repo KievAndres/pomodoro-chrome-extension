@@ -10,6 +10,14 @@ interface ProgressCircleProps {
 }
 
 export default function ProgressCircle(props: ProgressCircleProps) {
+  const { value = 0, maxValue = 100} = props;
+
+  const radius = 16;
+  const circumference = 2 * Math.PI * radius;
+  const progress = Math.min((value / maxValue) * 100, 100);
+  const strokeDashArray = `${circumference} ${circumference}`;
+  const storkeDashOffset = circumference - (progress / 100) * circumference;
+
   return (
     <svg xmlns="https://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 40 40">
       <defs>
@@ -32,14 +40,14 @@ export default function ProgressCircle(props: ProgressCircleProps) {
         r="16"
         strokeWidth="2"
         fill="transparent"
-        strokeDasharray="50 50"
-        strokeDashoffset="25"
+        strokeDasharray={strokeDashArray}
+        strokeDashoffset={storkeDashOffset}
       ></circle>
 
       <g className="progress-text">
         <text y="50%" transform="translate(0,2)" fill="url(#textGradient)">
           <tspan x="50%" textAnchor="middle" className="progress-percent">
-            25
+            {value}
           </tspan>
         </text>
         <text y="60%" transform="translate(0,2)" fill="url(#textGradient)">

@@ -6,7 +6,7 @@
   stroke: url(#gradient);
   filter: drop-shadow(0.5px 0.5px 1px #fc466b);
   stroke-linecap: round;
-  animation: progressbar 10s;
+  transition: .2s ease-in-out;
 }
 
 .progress-text {
@@ -16,13 +16,12 @@
 }
 
 .progress-percent {
-  /* El color ahora viene del gradiente SVG */
   animation: textGlow 2s ease-in-out infinite alternate;
+  transition: .2s ease-in-out;
 }
 
 .progress-name {
   font-size: 0.3em;
-  /* El color ahora viene del gradiente SVG */
   animation: textGlow 2s ease-in-out infinite alternate;
 }
 
@@ -33,13 +32,4 @@
   100% {
     filter: drop-shadow(0 0 8px #3F5EFB);
   }
-}
-
-@keyframes progressbar {
-  /* from {
-    stroke-dasharray: 0, 100;
-  }
-  to {
-    stroke-dasharray: 50, 50;
-  } */
 }

@@ -11,6 +11,8 @@ export default function TimerPage() {
   const [pomodoroState, setPomodoroState] = useState<PomodoroState | null>(null);
   const { config } = usePomodoroConfig();
 
+  const TIMING_LIST = [PomodoroStatus.Focus, PomodoroStatus.ShortBreak, PomodoroStatus.LongBreak]
+
   useEffect(() => {
     const loadInitialState = async () => {
       const storedPomodoroState = await storageUtils.getPomodoroState();
@@ -34,21 +36,32 @@ export default function TimerPage() {
   }, [pomodoroState]);
 
   const handleStartSession = async () => {
-    setPomodoroState({
-      status: PomodoroStatus.Focus,
-      startTime: Date.now(),
-      duration: config.focusDuration * 60 * 1000,
-    });
-  };
-
-  const handleCompleteSession = async () => {
     if (!pomodoroState) return;
+
     switch (pomodoroState.status) {
-      case PomodoroStatus.Focus:
+      case PomodoroStatus.Idle:
+        setPomodoroState({
+          status: PomodoroStatus.Focus,
+          startTime: Date.now(),
+          duration: config.focusDuration * 60 * 1000,
+        });
+        break;
+      case PomodoroStatus.WaitForShortBreak:
         setPomodoroState({
           status: PomodoroStatus.ShortBreak,
           startTime: Date.now(),
           duration: config.shortBreakDuration * 60 * 1000,
+        });
+        break;
+    }
+  };
+
+  const handleCompletedSession = async () => {
+    if (!pomodoroState) return;
+    switch (pomodoroState.status) {
+      case PomodoroStatus.Focus:
+        setPomodoroState({
+          status: PomodoroStatus.WaitForShortBreak,
         });
         break;
     }
@@ -59,14 +72,14 @@ export default function TimerPage() {
       <section className="header">
         <h2>POMODORO TIMER</h2>
       </section>
-      {pomodoroState?.status === PomodoroStatus.Idle && (
+      {pomodoroState?.status && !TIMING_LIST.includes(pomodoroState?.status) && (
         <div>
-          <StartSessionMessage onStartSession={handleStartSession} />
+          <StartSessionMessage onStartSession={handleStartSession} pomodoroStatus={pomodoroState?.status} />
         </div>
       )}
-      {pomodoroState?.status === PomodoroStatus.Focus && (
+      {pomodoroState?.status && TIMING_LIST.includes(pomodoroState?.status) && (
         <div className="focus-session">
-          <SessionInProgress onComplete={handleCompleteSession} />
+          <SessionInProgress onComplete={handleCompletedSession} />
         </div>
       )}
     </div>

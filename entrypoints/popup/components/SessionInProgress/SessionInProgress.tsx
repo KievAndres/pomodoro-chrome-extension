@@ -4,10 +4,12 @@ import { usePomodoroConfig } from "@shared/hooks/usePomodoroConfig";
 import { PomodoroState } from "@shared/interfaces/PomodoroState";
 import { storageUtils } from "@shared/utils/storage";
 import { SessionInProgressProps } from "./SessionInProgressProps";
+import { PomodoroStatus } from "@shared/enums/PomodoroStatus";
 
 export default function SessionInProgress({ onComplete }: SessionInProgressProps) {
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [pomodoroState, setPomodoroState] = useState<PomodoroState | null>(null);
+  const [sessionDuration, setSessionDuration] = useState<number>(0);
   const {config} = usePomodoroConfig();
 
   useEffect(() => {
@@ -26,8 +28,22 @@ export default function SessionInProgress({ onComplete }: SessionInProgressProps
       const now = Date.now();
       const elapsed = now - pomodoroState.startTime!;
       let elpasedMinutes = Math.floor(elapsed / (1000 * 60));
-      if (elpasedMinutes >= config.focusDuration) {
-        elpasedMinutes = config.focusDuration;
+      let currentSessionDuration = 0;
+      switch (pomodoroState.status) {
+        case PomodoroStatus.Focus:
+          currentSessionDuration = config.focusDuration;
+          break;
+        case PomodoroStatus.ShortBreak:
+          currentSessionDuration = config.shortBreakDuration;
+          break;
+        case PomodoroStatus.LongBreak:
+          currentSessionDuration = config.longBreakDuration;
+          break;
+      }
+      setSessionDuration(currentSessionDuration);
+      console.log(elapsed, elpasedMinutes, currentSessionDuration);
+      if (elpasedMinutes >= currentSessionDuration) {
+        elpasedMinutes = currentSessionDuration;
         onComplete?.();
       }
       setElapsedTime(elpasedMinutes);
@@ -43,9 +59,8 @@ export default function SessionInProgress({ onComplete }: SessionInProgressProps
   return (
     <div className="session-in-progress">
       <ProgressCircle
-        value={config.focusDuration - elapsedTime}
-        maxValue={config.focusDuration}
-        colorRotation={true}
+        value={sessionDuration - elapsedTime}
+        maxValue={sessionDuration}
       />
     </div>
   )

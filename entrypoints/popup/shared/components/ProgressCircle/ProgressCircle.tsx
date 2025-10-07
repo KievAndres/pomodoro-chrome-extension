@@ -1,17 +1,9 @@
 import './ProgressCircle.css';
 import { useState, useEffect } from 'react';
+import { ProgressCircleProps } from './ProgressCircleProps';
 
-interface ProgressCircleProps {
-  background?: string;
-  color?: string;
-  value?: number;
-  maxValue?: number;
-  colorRotation?: boolean;
-}
 
-export default function ProgressCircle(props: ProgressCircleProps) {
-  const { value = 0, maxValue = 100} = props;
-
+export default function ProgressCircle({ value = 0, maxValue = 100}: ProgressCircleProps) {
   const radius = 16;
   const circumference = 2 * Math.PI * radius;
   const progress = Math.min((value / maxValue) * 100, 100);

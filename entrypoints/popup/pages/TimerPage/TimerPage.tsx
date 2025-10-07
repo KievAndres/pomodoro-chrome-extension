@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './TimerPage.css';
-import StartFocusingMessage from '@components/StartFocusingMessage/StartFocusingMessage';
+import StartSessionMessage from '@components/StartSessionMessage/StartSessionMessage';
 import { PomodoroStatus } from '@shared/enums/PomodoroStatus';
 import { PomodoroState } from '@shared/interfaces/PomodoroState';
 import { storageUtils } from '@shared/utils/storage';
@@ -33,7 +33,7 @@ export default function TimerPage() {
     storageUtils.savePomodoroState(pomodoroState);
   }, [pomodoroState]);
 
-  const handleStartFocusing = async () => {
+  const handleStartSession = async () => {
     setPomodoroState({
       status: PomodoroStatus.Focus,
       startTime: Date.now(),
@@ -61,7 +61,7 @@ export default function TimerPage() {
       </section>
       {pomodoroState?.status === PomodoroStatus.Idle && (
         <div>
-          <StartFocusingMessage onStartFocusing={handleStartFocusing} />
+          <StartSessionMessage onStartSession={handleStartSession} />
         </div>
       )}
       {pomodoroState?.status === PomodoroStatus.Focus && (

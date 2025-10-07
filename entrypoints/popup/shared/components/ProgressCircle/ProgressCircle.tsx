@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { ProgressCircleProps } from './ProgressCircleProps';
 
 
-export default function ProgressCircle({ value = 0, maxValue = 100}: ProgressCircleProps) {
+export default function ProgressCircle({ value = 0, maxValue = 100, label = ''}: ProgressCircleProps) {
   const radius = 16;
   const circumference = 2 * Math.PI * radius;
   const progress = Math.min((value / maxValue) * 100, 100);
@@ -45,7 +45,7 @@ export default function ProgressCircle({ value = 0, maxValue = 100}: ProgressCir
         </text>
         <text y="60%" transform="translate(0,2)" fill="url(#textGradient)">
           <tspan x="50%" textAnchor="middle" className="progress-name">
-            Focus
+            {label}
           </tspan>
         </text>
       </g>

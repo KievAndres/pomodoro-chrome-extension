@@ -64,6 +64,11 @@ export default function TimerPage() {
           status: PomodoroStatus.WaitForShortBreak,
         });
         break;
+      case PomodoroStatus.ShortBreak:
+        setPomodoroState({
+          status: PomodoroStatus.WaitForFocus,
+        });
+        break;
     }
   };
 

@@ -1,5 +1,5 @@
 export enum PomodoroStatus {
-  WaitingForStart = 'WAITING_FOR_START', // Waiting for start
+  WaitForFocus = 'WAIT_FOR_FOCUS', // Waiting for focus to start
   Focus = 'FOCUS', // ~25 min of focused work
   WaitForShortBreak = 'WAIT_FOR_SHORT_BREAK', // Wait for short break to start
   ShortBreak = 'SHORT_BREAK', // ~5 min of short rest

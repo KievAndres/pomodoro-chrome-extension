@@ -10,6 +10,7 @@ export default function SessionInProgress({ onComplete }: SessionInProgressProps
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [pomodoroState, setPomodoroState] = useState<PomodoroState | null>(null);
   const [sessionDuration, setSessionDuration] = useState<number>(0);
+  const [sessionLabel, setSessionLabel] = useState<string>('');
   const {config} = usePomodoroConfig();
 
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function SessionInProgress({ onComplete }: SessionInProgressProps
           break;
       }
       setSessionDuration(currentSessionDuration);
-      
+
       if (elpasedMinutes >= currentSessionDuration) {
         elpasedMinutes = currentSessionDuration;
         onComplete?.();
@@ -55,12 +56,33 @@ export default function SessionInProgress({ onComplete }: SessionInProgressProps
 
     return () => clearInterval(interval);
   }, [pomodoroState?.startTime]);
+
+  useEffect(() => {
+    if (!pomodoroState?.status) return;
+
+    switch (pomodoroState.status) {
+      case PomodoroStatus.Focus:
+        setSessionLabel('Focus');
+        break;
+      case PomodoroStatus.ShortBreak:
+        setSessionLabel('Short Break');
+        break;
+      case PomodoroStatus.LongBreak:
+        setSessionLabel('Long Break');
+        break;
+      default:
+        setSessionLabel('');
+        break;     
+    }
+
+  }, [pomodoroState?.status])
   
   return (
     <div className="session-in-progress">
       <ProgressCircle
         value={sessionDuration - elapsedTime}
         maxValue={sessionDuration}
+        label={sessionLabel}
       />
     </div>
   )

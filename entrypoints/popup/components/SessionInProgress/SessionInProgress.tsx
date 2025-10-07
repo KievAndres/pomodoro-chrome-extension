@@ -41,7 +41,7 @@ export default function SessionInProgress({ onComplete }: SessionInProgressProps
           break;
       }
       setSessionDuration(currentSessionDuration);
-      console.log(elapsed, elpasedMinutes, currentSessionDuration);
+      
       if (elpasedMinutes >= currentSessionDuration) {
         elpasedMinutes = currentSessionDuration;
         onComplete?.();

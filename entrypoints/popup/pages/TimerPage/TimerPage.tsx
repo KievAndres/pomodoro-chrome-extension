@@ -42,6 +42,7 @@ export default function TimerPage() {
       case PomodoroStatus.Idle:
       case PomodoroStatus.WaitForFocus:
         setPomodoroState({
+          ...pomodoroState,
           status: PomodoroStatus.Focus,
           startTime: Date.now(),
           duration: config.focusDuration * 60 * 1000,
@@ -49,6 +50,7 @@ export default function TimerPage() {
         break;
       case PomodoroStatus.WaitForShortBreak:
         setPomodoroState({
+          ...pomodoroState,
           status: PomodoroStatus.ShortBreak,
           startTime: Date.now(),
           duration: config.shortBreakDuration * 60 * 1000,
@@ -65,18 +67,27 @@ export default function TimerPage() {
         const storedCompletedFocusSessions: number = storedPomodoroState?.completedFocusSessions ?? 0;
 
         setPomodoroState({
+          ...pomodoroState,
           status: PomodoroStatus.WaitForShortBreak,
-          completedFocusSessions: storedCompletedFocusSessions + 1
+          completedFocusSessions: storedCompletedFocusSessions + 1,
+          startTime: undefined,
+          duration: undefined
         });
         break;
       case PomodoroStatus.ShortBreak:
         setPomodoroState({
+          ...pomodoroState,
           status: PomodoroStatus.WaitForFocus,
+          startTime: undefined,
+          duration: undefined
         });
         break;
       case PomodoroStatus.LongBreak:
         setPomodoroState({
+          ...pomodoroState,
           status: PomodoroStatus.WaitForFocus,
+          startTime: undefined,
+          duration: undefined
         });
         break;
     }

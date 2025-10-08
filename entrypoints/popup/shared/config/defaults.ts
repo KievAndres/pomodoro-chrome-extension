@@ -1,7 +1,7 @@
 export const DEFAULT_POMODORO_CONFIG = {
-  focusDuration: 25,
-  shortBreakDuration: 5,
-  longBreakDuration: 15,
+  focusDuration: .0001,
+  shortBreakDuration: .0001,
+  longBreakDuration: .0001,
   sessionsUntilLongBreak: 4,
   enableNotifications: true,
   enableSound: true,

@@ -1,7 +1,8 @@
 import { PomodoroStatus } from "@shared/enums/PomodoroStatus";
 
 export interface PomodoroState {
-  status: PomodoroStatus ;
+  status: PomodoroStatus;
   startTime?: number;
   duration?: number;
+  completedFocusSessions?: number;
 }

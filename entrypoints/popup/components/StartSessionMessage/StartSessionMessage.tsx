@@ -12,6 +12,7 @@ export default function StartSessionMessage({ pomodoroStatus, onStartSession }: 
   const sessionMessage = useMemo(() => {
     switch (pomodoroStatus) {
       case PomodoroStatus.Idle:
+      case PomodoroStatus.WaitForFocus:
         return 'Click to start focusing!'
       case PomodoroStatus.WaitForShortBreak:
         return 'Click to start short break!'

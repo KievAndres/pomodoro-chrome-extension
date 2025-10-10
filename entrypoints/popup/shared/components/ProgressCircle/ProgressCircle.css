@@ -7,7 +7,6 @@
   filter: drop-shadow(0.5px 0.5px 1px #fc466b);
   stroke-linecap: round;
   transition: .2s ease-in-out;
-  /* animation: gradientRotate 3s linear infinite; */
 }
 
 .progress-text {
@@ -35,16 +34,6 @@
   }
 }
 
-@keyframes gradientRotate {
-  0% {
-    transform: rotate(-90deg);
-  }
-  100% {
-    transform: rotate(270deg);
-  }
-}
-
-/* Animación para los colores del gradiente */
 .stop1 {
   animation: colorShift1 10s ease-in-out infinite;
 }

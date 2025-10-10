@@ -13,9 +13,11 @@ export default function StartSessionMessage({ pomodoroStatus, onStartSession }: 
     switch (pomodoroStatus) {
       case PomodoroStatus.Idle:
       case PomodoroStatus.WaitForFocus:
-        return 'Click to start focusing!'
+        return 'Click to start focusing!';
       case PomodoroStatus.WaitForShortBreak:
-        return 'Click to start short break!'
+        return 'Click to start short break!';
+      case PomodoroStatus.WaitForLongBreak:
+        return 'Click to start long break!';
     }
   }, [pomodoroStatus]);
 

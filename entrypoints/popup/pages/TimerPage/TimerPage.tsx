@@ -56,6 +56,14 @@ export default function TimerPage() {
           duration: config.shortBreakDuration * 60 * 1000,
         });
         break;
+      case PomodoroStatus.WaitForLongBreak:
+        setPomodoroState({
+          ...pomodoroState,
+          status: PomodoroStatus.LongBreak,
+          startTime: Date.now(),
+          duration: config.longBreakDuration * 60 * 1000
+        });
+        break;
     }
   };
 

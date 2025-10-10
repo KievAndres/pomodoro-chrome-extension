@@ -38,6 +38,8 @@ export default function TimerPage() {
   const handleStartSession = async (): Promise<void> => {
     if (!pomodoroState) return;
 
+    const storedPomodoroState: PomodoroState | null = await storageUtils.getPomodoroState();
+
     switch (pomodoroState.status) {
       case PomodoroStatus.Idle:
         setPomodoroState({
@@ -47,12 +49,18 @@ export default function TimerPage() {
         });
         break;
       case PomodoroStatus.WaitForFocus:
-        setPomodoroState({
+        const newPomodoroState: PomodoroState = {
           ...pomodoroState,
           status: PomodoroStatus.Focus,
           startTime: Date.now(),
-          duration: config.focusDuration * 60 * 1000,
-        });
+          duration: config.focusDuration * 60 * 1000
+        }
+
+        const storedCompletedPomodoroCycles: number = storedPomodoroState?.completedPomodoroCycles ?? 0;
+        if (storedPomodoroState?.completedFocusSessions === config.sessionsUntilLongBreak) {
+          newPomodoroState.completedPomodoroCycles = storedCompletedPomodoroCycles + 1;
+        }
+        setPomodoroState(newPomodoroState);
         break;
       case PomodoroStatus.WaitForShortBreak:
         setPomodoroState({

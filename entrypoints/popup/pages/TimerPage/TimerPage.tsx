@@ -35,7 +35,7 @@ export default function TimerPage() {
     storageUtils.savePomodoroState(pomodoroState);
   }, [pomodoroState]);
 
-  const handleStartSession = async () => {
+  const handleStartSession = async (): Promise<void> => {
     if (!pomodoroState) return;
 
     switch (pomodoroState.status) {
@@ -59,16 +59,17 @@ export default function TimerPage() {
     }
   };
 
-  const handleCompletedSession = async () => {
+  const handleCompletedSession = async (): Promise<void> => {
     if (!pomodoroState) return;
     switch (pomodoroState.status) {
       case PomodoroStatus.Focus:
         const storedPomodoroState: PomodoroState | null = await storageUtils.getPomodoroState();
         const storedCompletedFocusSessions: number = storedPomodoroState?.completedFocusSessions ?? 0;
+        const nextBreakStatus: PomodoroStatus = await determineBreakStatusAfterFocus();
 
         setPomodoroState({
           ...pomodoroState,
-          status: PomodoroStatus.WaitForShortBreak,
+          status: nextBreakStatus,
           completedFocusSessions: storedCompletedFocusSessions + 1,
           startTime: undefined,
           duration: undefined
@@ -92,6 +93,16 @@ export default function TimerPage() {
         break;
     }
   };
+
+  const determineBreakStatusAfterFocus = async (): Promise<PomodoroStatus> => {
+    const storedPomodoroState: PomodoroState | null = await storageUtils.getPomodoroState();
+    const currentCompletedFocusSessions: number = storedPomodoroState?.completedFocusSessions ?? 0;
+    console.log({currentCompletedFocusSessions}, {config})
+    if (currentCompletedFocusSessions < config.sessionsUntilLongBreak) {
+      return PomodoroStatus.WaitForShortBreak;
+    }
+    return PomodoroStatus.WaitForLongBreak;
+  }
 
   return (
     <div className="timer">

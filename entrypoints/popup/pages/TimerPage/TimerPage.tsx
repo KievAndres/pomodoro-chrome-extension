@@ -40,6 +40,12 @@ export default function TimerPage() {
 
     switch (pomodoroState.status) {
       case PomodoroStatus.Idle:
+        setPomodoroState({
+          status: PomodoroStatus.Focus,
+          startTime: Date.now(),
+          duration: config.focusDuration * 60 * 1000,
+        });
+        break;
       case PomodoroStatus.WaitForFocus:
         setPomodoroState({
           ...pomodoroState,
@@ -73,12 +79,12 @@ export default function TimerPage() {
       case PomodoroStatus.Focus:
         const storedPomodoroState: PomodoroState | null = await storageUtils.getPomodoroState();
         const storedCompletedFocusSessions: number = storedPomodoroState?.completedFocusSessions ?? 0;
-        const nextBreakStatus: PomodoroStatus = await determineBreakStatusAfterFocus();
-
+        const updatedCompletedFocusSessions: number = storedCompletedFocusSessions + 1;
+        const nextBreakStatus: PomodoroStatus = await determineBreakStatusAfterFocus(updatedCompletedFocusSessions);
         setPomodoroState({
           ...pomodoroState,
           status: nextBreakStatus,
-          completedFocusSessions: storedCompletedFocusSessions + 1,
+          completedFocusSessions: updatedCompletedFocusSessions,
           startTime: undefined,
           duration: undefined
         });
@@ -102,11 +108,8 @@ export default function TimerPage() {
     }
   };
 
-  const determineBreakStatusAfterFocus = async (): Promise<PomodoroStatus> => {
-    const storedPomodoroState: PomodoroState | null = await storageUtils.getPomodoroState();
-    const currentCompletedFocusSessions: number = storedPomodoroState?.completedFocusSessions ?? 0;
-    console.log({currentCompletedFocusSessions}, {config})
-    if (currentCompletedFocusSessions < config.sessionsUntilLongBreak) {
+  const determineBreakStatusAfterFocus = async (updatedCompletedFocusSessions: number): Promise<PomodoroStatus> => {
+    if (updatedCompletedFocusSessions < config.sessionsUntilLongBreak) {
       return PomodoroStatus.WaitForShortBreak;
     }
     return PomodoroStatus.WaitForLongBreak;

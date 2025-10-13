@@ -34,12 +34,20 @@
   }
 }
 
+/* Theme Focus 1 */
 .stop-color-1-theme-focus-1 {
   animation: stopColor1ThemeFocus1 10s ease-in-out infinite;
 }
-
 .stop-color-2-theme-focus-1 {
   animation: stopColor2ThemeFocus1 10s ease-in-out infinite;
+}
+
+/* Theme Break 1 */
+.stop-color-1-theme-break-1 {
+  animation: stopColor1ThemeBreak1 10s ease-in-out infinite;
+}
+.stop-color-2-theme-break-1 {
+  animation: stopColor2ThemeBreak1 10s ease-in-out infinite;
 }
 
 @keyframes stopColor1ThemeFocus1 {
@@ -54,4 +62,18 @@
   25% { stop-color: #00D4AA; }
   50% { stop-color: #FF6B6B; }
   75% { stop-color: #FC466B; }
+}
+
+@keyframes stopColor1ThemeBreak1 {
+  0%, 100% { stop-color: #ecec49 }
+  25% { stop-color: #f7ab1e }
+  50% { stop-color: #0ffce1; }
+  75% { stop-color: #1757d8; }
+}
+
+@keyframes stopColor2ThemeBreak1 {
+  0%, 100% { stop-color: #26e86a }
+  25% { stop-color: #3680ff }
+  50% { stop-color: #ff710c; }
+  75% { stop-color: #6ce411; }
 }

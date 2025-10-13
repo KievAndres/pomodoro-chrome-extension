@@ -1,4 +1,4 @@
-import { ProgressCircleTheme } from './ProgressCircleTheme';
+import { ProgressCircleTheme } from '@shared/enums/ProgressCircleTheme';
 
 export interface ProgressCircleProps {
   value?: number;

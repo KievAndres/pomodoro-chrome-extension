@@ -1,36 +1,43 @@
 import './ProgressCircle.css';
 import { useState, useEffect } from 'react';
 import { ProgressCircleProps } from './ProgressCircleProps';
-import { ProgressCircleTheme } from './ProgressCircleTheme';
+import { ProgressCircleTheme } from '@shared/enums/ProgressCircleTheme';
 
 export default function ProgressCircle({
   value = 0,
   maxValue = 100,
   label = '',
-  theme = { colorFrom: '#FC466B', colorTo: '#3F5EFB' },
+  theme = ProgressCircleTheme.Focus1,
 }: ProgressCircleProps) {
   const radius = 16;
   const circumference = 2 * Math.PI * radius;
   const progress = Math.min((value / maxValue) * 100, 100);
   const strokeDashArray = `${circumference} ${circumference}`;
   const storkeDashOffset = circumference - (progress / 100) * circumference;
-  const [currentTheme, setCurrentTheme] = useState<ProgressCircleTheme>(theme);
+
+  const [colorStop1, setColorStop1] = useState<string>('#FC466B');
+  const [colorStop2, setColorStop2] = useState<string>('#3F5EFB');
 
   useEffect(() => {
-    setCurrentTheme(theme);
+    switch (theme) {
+      case ProgressCircleTheme.Focus1:
+        setColorStop1('#FC466B');
+        setColorStop2('#3F5EFB');
+        break;
+    }
   }, [theme]);
 
   return (
     <svg xmlns="https://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 40 40">
       <defs>
         <linearGradient id="gradient" x1="80%" y1="20%" x2="5%" y2="5%" spreadMethod="pad">
-          <stop offset="0%" stopColor={currentTheme.colorFrom} className="stop1" />
-          <stop offset="100%" stopColor={currentTheme.colorTo} className="stop2" />
+          <stop offset="0%" stopColor={colorStop1} className="stop1" />
+          <stop offset="100%" stopColor={colorStop2} className="stop2" />
         </linearGradient>
 
         <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor={currentTheme.colorFrom} className="stop1" />
-          <stop offset="100%" stopColor={currentTheme.colorTo} className="stop2" />
+          <stop offset="0%" stopColor={colorStop1} className="stop1" />
+          <stop offset="100%" stopColor={colorStop2} className="stop2" />
         </linearGradient>
       </defs>
 

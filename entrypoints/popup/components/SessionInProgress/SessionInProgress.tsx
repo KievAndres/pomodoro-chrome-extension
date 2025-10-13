@@ -5,6 +5,7 @@ import { PomodoroState } from "@shared/interfaces/PomodoroState";
 import { storageUtils } from "@shared/utils/storage";
 import { SessionInProgressProps } from "./SessionInProgressProps";
 import { PomodoroStatus } from "@shared/enums/PomodoroStatus";
+import { ProgressCircleTheme } from "@shared/enums/ProgressCircleTheme";
 
 export default function SessionInProgress({ onComplete }: SessionInProgressProps) {
   const [elapsedTime, setElapsedTime] = useState<number>(0);
@@ -12,6 +13,7 @@ export default function SessionInProgress({ onComplete }: SessionInProgressProps
   const [sessionDuration, setSessionDuration] = useState<number>(0);
   const [sessionLabel, setSessionLabel] = useState<string>('');
   const {config} = usePomodoroConfig();
+  const [theme, setTheme] = useState<ProgressCircleTheme>(ProgressCircleTheme.Focus1);
 
   useEffect(() => {
     const loadInitialState = async () => {
@@ -63,15 +65,19 @@ export default function SessionInProgress({ onComplete }: SessionInProgressProps
     switch (pomodoroState.status) {
       case PomodoroStatus.Focus:
         setSessionLabel('Focus');
+        setTheme(ProgressCircleTheme.Focus1);
         break;
       case PomodoroStatus.ShortBreak:
         setSessionLabel('Short Break');
+        setTheme(ProgressCircleTheme.Break1)
         break;
       case PomodoroStatus.LongBreak:
         setSessionLabel('Long Break');
+        setTheme(ProgressCircleTheme.Break1);
         break;
       default:
         setSessionLabel('');
+        setTheme(ProgressCircleTheme.Focus1);
         break;     
     }
 
@@ -83,6 +89,7 @@ export default function SessionInProgress({ onComplete }: SessionInProgressProps
         value={sessionDuration - elapsedTime}
         maxValue={sessionDuration}
         label={sessionLabel}
+        theme={theme}
       />
     </div>
   )

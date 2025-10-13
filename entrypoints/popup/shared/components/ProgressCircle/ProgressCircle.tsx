@@ -15,14 +15,18 @@ export default function ProgressCircle({
   const strokeDashArray = `${circumference} ${circumference}`;
   const storkeDashOffset = circumference - (progress / 100) * circumference;
 
-  const [colorStop1, setColorStop1] = useState<string>('#FC466B');
-  const [colorStop2, setColorStop2] = useState<string>('#3F5EFB');
+  const [stopColor1, setStopColor1] = useState<string>('#FC466B');
+  const [stopColor2, setStopColor2] = useState<string>('#3F5EFB');
 
   useEffect(() => {
     switch (theme) {
       case ProgressCircleTheme.Focus1:
-        setColorStop1('#FC466B');
-        setColorStop2('#3F5EFB');
+        setStopColor1('#FC466B');
+        setStopColor2('#3F5EFB');
+        break;
+      case ProgressCircleTheme.Break1:
+        setStopColor1('#3F5EFB');
+        setStopColor2('#FC466B');
         break;
     }
   }, [theme]);
@@ -31,13 +35,13 @@ export default function ProgressCircle({
     <svg xmlns="https://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 40 40">
       <defs>
         <linearGradient id="gradient" x1="80%" y1="20%" x2="5%" y2="5%" spreadMethod="pad">
-          <stop offset="0%" stopColor={colorStop1} className="stop1" />
-          <stop offset="100%" stopColor={colorStop2} className="stop2" />
+          <stop offset="0%" stopColor={stopColor1} className="stop-color-1-theme-focus-1" />
+          <stop offset="100%" stopColor={stopColor2} className="stop-color-2-theme-focus-1" />
         </linearGradient>
 
         <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor={colorStop1} className="stop1" />
-          <stop offset="100%" stopColor={colorStop2} className="stop2" />
+          <stop offset="0%" stopColor={stopColor1} className="stop-color-1-theme-focus-1" />
+          <stop offset="100%" stopColor={stopColor2} className="stop-color-2-theme-focus-1" />
         </linearGradient>
       </defs>
 

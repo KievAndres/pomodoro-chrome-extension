@@ -34,22 +34,22 @@
   }
 }
 
-.stop1 {
-  animation: colorShift1 10s ease-in-out infinite;
+.stop-color-1-theme-focus-1 {
+  animation: stopColor1ThemeFocus1 10s ease-in-out infinite;
 }
 
-.stop2 {
-  animation: colorShift2 10s ease-in-out infinite;
+.stop-color-2-theme-focus-1 {
+  animation: stopColor2ThemeFocus1 10s ease-in-out infinite;
 }
 
-@keyframes colorShift1 {
+@keyframes stopColor1ThemeFocus1 {
   0%, 100% { stop-color: #FC466B; }
   25% { stop-color: #3F5EFB; }
   50% { stop-color: #00D4AA; }
   75% { stop-color: #FF6B6B; }
 }
 
-@keyframes colorShift2 {
+@keyframes stopColor2ThemeFocus1  {
   0%, 100% { stop-color: #3F5EFB; }
   25% { stop-color: #00D4AA; }
   50% { stop-color: #FF6B6B; }

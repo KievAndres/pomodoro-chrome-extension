@@ -1,0 +1,1 @@
+export const POMODORO_BADGE_REFRESH_ALARM = 'pomodoro-badge-refresh';

@@ -5,7 +5,10 @@ import { resolve } from 'path';
 export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   manifest: {
-    permissions: ['storage']
+    permissions: ['storage', 'alarms'],
+    action: {
+      default_title: 'Pomodoro'
+    }
   },
   vite: () =>  ({
     resolve: {

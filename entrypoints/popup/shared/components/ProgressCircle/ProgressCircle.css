@@ -9,6 +9,10 @@
   transition: .2s ease-in-out;
 }
 
+.progress-paused {
+  filter: drop-shadow(0.5px 0.5px 1px gray);
+}
+
 .progress-text {
   font-size: 0.7em;
   font-family: Trebuchet MS, sans-serif;
@@ -25,12 +29,25 @@
   animation: textGlow 2s ease-in-out infinite alternate;
 }
 
+.text-paused {
+  animation: textGlowPaused 2s ease-in-out infinite alternate;
+}
+
 @keyframes textGlow {
   0% {
     filter: drop-shadow(0 0 2px #FC466B);
   }
   100% {
     filter: drop-shadow(0 0 8px #3F5EFB);
+  }
+}
+
+@keyframes textGlowPaused {
+  0% {
+    filter: drop-shadow(0 0 2px #464646);
+  }
+  100% {
+    filter: drop-shadow(0 0 8px #b1b1b1)
   }
 }
 
@@ -50,13 +67,20 @@
   animation: stopColor2ThemeBreak1 10s ease-in-out infinite;
 }
 
+/* Theme Pause */
+.stop-color-1-theme-pause {
+  animation: stopColor1ThemePause 10s ease-in-out infinite;
+}
+.stop-color-2-theme-pause {
+  animation: stopColor2ThemePause 10s ease-in-out infinite;
+}
+
 @keyframes stopColor1ThemeFocus1 {
   0%, 100% { stop-color: #FC466B; }
   25% { stop-color: #3F5EFB; }
   50% { stop-color: #00D4AA; }
   75% { stop-color: #FF6B6B; }
 }
-
 @keyframes stopColor2ThemeFocus1  {
   0%, 100% { stop-color: #3F5EFB; }
   25% { stop-color: #00D4AA; }
@@ -64,16 +88,30 @@
   75% { stop-color: #FC466B; }
 }
 
+/* Theme Break 1 */
 @keyframes stopColor1ThemeBreak1 {
-  0%, 100% { stop-color: #ecec49 }
-  25% { stop-color: #f7ab1e }
+  0%, 100% { stop-color: #ecec49; }
+  25% { stop-color: #f7ab1e; }
   50% { stop-color: #0ffce1; }
   75% { stop-color: #1757d8; }
 }
-
 @keyframes stopColor2ThemeBreak1 {
-  0%, 100% { stop-color: #26e86a }
-  25% { stop-color: #3680ff }
+  0%, 100% { stop-color: #26e86a; }
+  25% { stop-color: #3680ff; }
   50% { stop-color: #ff710c; }
   75% { stop-color: #6ce411; }
+}
+
+/* Theme Pause */
+@keyframes stopColor1ThemePause {
+  0%, 100% { stop-color: #525252; }
+  25% { stop-color: #ababab; }
+  50% { stop-color: #474646; }
+  75% { stop-color: #e3e3e3; }
+}
+@keyframes stopColor2ThemePause {
+  0%, 100% { stop-color: #dcdcdc; }
+  25% { stop-color: #4d4d4d; }
+  50% { stop-color: #e5e5e5; }
+  75% { stop-color: #979797; }
 }

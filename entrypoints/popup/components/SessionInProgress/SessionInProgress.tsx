@@ -82,6 +82,10 @@ export default function SessionInProgress({ onComplete }: SessionInProgressProps
     }
 
   }, [pomodoroState?.status])
+
+  const handleProgressCircleClick = (): void => {
+    
+  }
   
   return (
     <div className="session-in-progress">
@@ -90,6 +94,7 @@ export default function SessionInProgress({ onComplete }: SessionInProgressProps
         maxValue={sessionDuration}
         label={sessionLabel}
         theme={theme}
+        onClick={handleProgressCircleClick}
       />
     </div>
   )

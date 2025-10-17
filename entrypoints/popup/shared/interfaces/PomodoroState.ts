@@ -6,4 +6,6 @@ export interface PomodoroState {
   duration?: number;
   completedFocusSessions?: number;
   completedPomodoroCycles?: number;
+  isPaused?: boolean;
+  remainingTime?: number;
 }

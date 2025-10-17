@@ -7,6 +7,8 @@ import { validateConfig } from '@shared/utils/config';
 import { PomodoroStatus } from '@shared/enums/PomodoroStatus';
 import { POMODORO_BADGE_REFRESH_ALARM } from '@shared/constants/alarm-names';
 import { POMODORO_ACTIVE_STATUSES } from '@shared/constants/pomodoro-active-statuses';
+import { ContextMenuId } from '@shared/enums/ContextMenuId';
+import { ContextMenuContexts } from '@shared/enums/ContextMenuContexts';
 
 export default defineBackground(() => {
   browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -48,8 +50,23 @@ export default defineBackground(() => {
           .then(() => sendResponse({ success: true }))
           .catch((error) => sendResponse({ success: false, error: error.message }));
         return true;
+      
+      // // Context menu actions
+      // case 'save-pomodoro-state':
+      //   savePomodoroState(message.state)
+      //     .then(async () => {
+      //       await updateBadgeFromState(message.state);
+      //       sendResponse({ success: true });
+      //     })
+      //     .catch((error) => sendResponse({ success: false, error: error.message }));
+      //   return true;
+      // case 'clear-pomodoro-state':
+      //   clearPomodoroState()
+      //     .then(() => sendResponse({ success: true }))
+      //     .catch((error) => sendResponse({ success: false, error: error.message }));
+      //   return true;
       default:
-        sendResponse({ success: false, error: 'Unkown action' });
+        sendResponse({ success: false, error: 'Unknown action' });
     }
   });
 
@@ -177,9 +194,224 @@ export default defineBackground(() => {
   }
 
   // Initialization
+  createContextMenu();
+
   (async () => {
     const state = await getPomodoroState();
     // Sync badge with current state
     await updateBadgeFromState(state);
   })();
+
+  function createContextMenu() {
+    browser.contextMenus.create({
+      id: ContextMenuId.MainMenu,
+      title: '🍅 Pomodoro',
+      contexts: [ContextMenuContexts.All]
+    });
+
+    browser.contextMenus.create({
+      id: ContextMenuId.StartFocus,
+      parentId: ContextMenuId.MainMenu,
+      title: 'Start focus session',
+      contexts: [ContextMenuContexts.All]
+    });
+
+    browser.contextMenus.create({
+      id: ContextMenuId.StartShortBreak,
+      parentId: ContextMenuId.MainMenu,
+      title: 'Start short break session',
+      contexts: [ContextMenuContexts.All]
+    });
+
+    browser.contextMenus.create({
+      id: ContextMenuId.StartLongBreak,
+      parentId: ContextMenuId.MainMenu,
+      title: 'Start long break session',
+      contexts: [ContextMenuContexts.All]
+    });
+
+    browser.contextMenus.onClicked.addListener(async (contextMenuInfo, tab) => {
+      switch (contextMenuInfo.menuItemId) {
+        case ContextMenuId.StartFocus:
+          await startPomodoroSession(PomodoroStatus.Focus);
+          break;
+        case ContextMenuId.StartShortBreak:
+          await startPomodoroSession(PomodoroStatus.ShortBreak);
+          break;
+        case ContextMenuId.StartLongBreak:
+          await startPomodoroSession(PomodoroStatus.LongBreak);
+          break;
+      }
+    });
+  }
+
+  async function startPomodoroSession(pomodoroStatus: PomodoroStatus): Promise<void>{
+    try {
+      const storedPomodoroConfig = await browser.storage.local.get(StorageKeys.PomodoroConfig);
+      const pomodoroConfig: PomodoroConfig = storedPomodoroConfig[StorageKeys.PomodoroConfig] || DEFAULT_POMODORO_CONFIG;
+
+      let duration: number;
+      let status: PomodoroStatus;
+
+      switch (pomodoroStatus) {
+        case PomodoroStatus.Focus:
+        default:
+          duration = pomodoroConfig.focusDuration * 60 * 1000;
+          status = PomodoroStatus.Focus;
+          break;
+        case PomodoroStatus.ShortBreak:
+          duration = pomodoroConfig.shortBreakDuration * 60 * 1000;
+          status = PomodoroStatus.ShortBreak;
+          break;
+        case PomodoroStatus.LongBreak:
+          duration = pomodoroConfig.longBreakDuration * 60 * 1000;
+          status = PomodoroStatus.LongBreak;
+          break;
+      }
+
+      const newState: PomodoroState = {
+        status,
+        startTime: Date.now(),
+        duration
+      }
+
+      await savePomodoroState(newState);
+      await updateBadgeFromState(newState);
+    } catch (error) {
+      console.error('Error starting pomodoro session', error);
+    }
+  } 
+
+//   function createContextMenu() {
+//     // Separador
+//     browser.contextMenus.create({
+//       id: 'separator-1',
+//       parentId: 'pomodoro-main',
+//       type: 'separator',
+//       contexts: ['all']
+//     });
+
+//     // Opciones de control
+//     browser.contextMenus.create({
+//       id: 'pause-timer',
+//       parentId: 'pomodoro-main',
+//       title: 'Pausar Timer',
+//       contexts: ['all']
+//     });
+
+//     browser.contextMenus.create({
+//       id: 'resume-timer',
+//       parentId: 'pomodoro-main',
+//       title: 'Reanudar Timer',
+//       contexts: ['all']
+//     });
+
+//     browser.contextMenus.create({
+//       id: 'stop-timer',
+//       parentId: 'pomodoro-main',
+//       title: 'Detener Timer',
+//       contexts: ['all']
+//     });
+
+//     // Separador
+//     browser.contextMenus.create({
+//       id: 'separator-2',
+//       parentId: 'pomodoro-main',
+//       type: 'separator',
+//       contexts: ['all']
+//     });
+
+//     // Abrir popup
+//     browser.contextMenus.create({
+//       id: 'open-popup',
+//       parentId: 'pomodoro-main',
+//       title: 'Abrir Pomodoro',
+//       contexts: ['all']
+//     });
+
+//     // Listener para manejar clicks en el menú contextual
+//     browser.contextMenus.onClicked.addListener(async (info, tab) => {
+//       console.log('Context menu clicked:', info.menuItemId);
+
+//       switch (info.menuItemId) {
+//         case 'pause-timer':
+//           await pauseTimer();
+//           break;
+//         case 'resume-timer':
+//           await resumeTimer();
+//           break;
+//         case 'stop-timer':
+//           await stopTimer();
+//           break;
+//         case 'open-popup':
+//           if (tab?.id) {
+//             await browser.action.openPopup();
+//           }
+//           break;
+//       }
+//     });
+//   }
+
+
+//   // Función para pausar el timer
+//   async function pauseTimer() {
+//     try {
+//       const state = await getPomodoroState();
+      
+//       if (state && !state.isPaused && state.startTime && state.duration) {
+//         const now = Date.now();
+//         const elapsed = now - state.startTime;
+//         const remaining = state.duration - elapsed;
+        
+//         const updatedState: PomodoroState = {
+//           ...state,
+//           isPaused: true,
+//           remainingTime: remaining
+//         };
+
+//         await savePomodoroState(updatedState);
+//         await updateBadgeFromState(updatedState);
+
+//         console.log('Timer pausado');
+//       }
+//     } catch (error) {
+//       console.error('Error pausando timer:', error);
+//     }
+//   }
+
+//   // Función para reanudar el timer
+//   async function resumeTimer() {
+//     try {
+//       const state = await getPomodoroState();
+      
+//       if (state && state.isPaused) {
+//         const updatedState: PomodoroState = {
+//           ...state,
+//           isPaused: false,
+//           startTime: Date.now(),
+//           duration: state.remainingTime || state.duration,
+//           remainingTime: undefined
+//         };
+
+//         await savePomodoroState(updatedState);
+//         await updateBadgeFromState(updatedState);
+
+//         console.log('Timer reanudado');
+//       }
+//     } catch (error) {
+//       console.error('Error reanudando timer:', error);
+//     }
+//   }
+
+//   // Función para detener el timer
+//   async function stopTimer() {
+//     try {
+//       await clearPomodoroState();
+//       await updateBadgeFromState(null);
+
+//       console.log('Timer detenido');
+//     } catch (error) {
+//       console.error('Error deteniendo timer:', error);
+//     }
+//   }
 });

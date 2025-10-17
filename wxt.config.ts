@@ -5,7 +5,7 @@ import { resolve } from 'path';
 export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   manifest: {
-    permissions: ['storage', 'alarms'],
+    permissions: ['storage', 'alarms', 'contextMenus'],
     action: {
       default_title: 'Pomodoro'
     }

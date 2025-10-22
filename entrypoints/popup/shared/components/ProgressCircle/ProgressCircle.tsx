@@ -50,8 +50,9 @@ export default function ProgressCircle({
   }, [theme, isPaused]);
 
   const handleClick = (): void => {
-    setIsPaused(!isPaused);
-    onClick?.();
+    const newIsPaused = !isPaused;
+    setIsPaused(newIsPaused);
+    onClick?.(newIsPaused);
   }
   
   return (

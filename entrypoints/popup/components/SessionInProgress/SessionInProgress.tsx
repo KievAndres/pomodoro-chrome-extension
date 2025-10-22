@@ -7,7 +7,8 @@ import { SessionInProgressProps } from "./SessionInProgressProps";
 import { PomodoroStatus } from "@shared/enums/PomodoroStatus";
 import { ProgressCircleTheme } from "@shared/enums/ProgressCircleTheme";
 
-export default function SessionInProgress({ onComplete }: SessionInProgressProps) {
+export default function SessionInProgress(SessionInProgressProps: SessionInProgressProps) {
+  const {onComplete, togglePause: togglePauseProp} = SessionInProgressProps;
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [pomodoroState, setPomodoroState] = useState<PomodoroState | null>(null);
   const [sessionDuration, setSessionDuration] = useState<number>(0);
@@ -83,8 +84,8 @@ export default function SessionInProgress({ onComplete }: SessionInProgressProps
 
   }, [pomodoroState?.status])
 
-  const handleProgressCircleClick = (): void => {
-    
+  const toggleIsPaused = (isPaused: boolean): void => {
+    togglePauseProp?.(isPaused)
   }
   
   return (
@@ -94,7 +95,7 @@ export default function SessionInProgress({ onComplete }: SessionInProgressProps
         maxValue={sessionDuration}
         label={sessionLabel}
         theme={theme}
-        onClick={handleProgressCircleClick}
+        onClick={toggleIsPaused}
       />
     </div>
   )

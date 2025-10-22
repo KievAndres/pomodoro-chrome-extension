@@ -5,5 +5,5 @@ export interface ProgressCircleProps {
   maxValue?: number;
   label?: string;
   theme?: ProgressCircleTheme;
-  onClick?: () => void;
+  onClick?: (isPaused: boolean) => void;
 }

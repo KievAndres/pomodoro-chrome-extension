@@ -3,7 +3,12 @@ import { DEFAULT_POMODORO_CONFIG } from '@shared/defaults';
 import { DEFAULT_POMODORO_STATE } from '@shared/defaults/defaultPomodoroState';
 import { BackgroundActions, PomodoroStatus } from '@shared/enums';
 import { PomodoroConfig, PomodoroState } from '@shared/interfaces';
-import { convertMillisecondsIntoMinutes, convertMinutesIntoMilliseconds, getNextPomodoroStatus, getSessionDurationInMinutes } from '@shared/utils';
+import {
+  convertMillisecondsIntoMinutes,
+  convertMinutesIntoMilliseconds,
+  getNextPomodoroStatus,
+  getSessionDurationInMinutes,
+} from '@shared/utils';
 
 export default defineBackground(() => {
   browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
@@ -111,6 +116,7 @@ export default defineBackground(() => {
       };
 
       await savePomodoroState(newPomodoroState);
+      await updateBadge();
       browser.alarms.create(AlarmKeys.PomodoroSessionEnd, { when: endTime });
     } catch (error) {
       console.error('Error starting next session', error);
@@ -188,12 +194,24 @@ export default defineBackground(() => {
         throw new Error('No pomodoro state found');
       }
 
-      const remainingTime: number = pomodoroState.remainingTime ?? 0;
-      if (!remainingTime) {
-        await browser.action.setBadgeText({ text: '' });
-        throw new Error('Remaining time is not set');
+      const allowedStatuses: PomodoroStatus[] = [
+        PomodoroStatus.Focus,
+        PomodoroStatus.ShortBreak,
+        PomodoroStatus.LongBreak,
+      ];
+
+      if (!allowedStatuses.includes(pomodoroState.status)) {
+        return;
       }
-      const remainingTimeInMinutes: number = convertMillisecondsIntoMinutes(remainingTime);
+
+      const startTime: number = pomodoroState.startTime ?? 0;
+      const endTime: number = pomodoroState.endTime ?? 0;
+      if (!startTime || !endTime) {
+        await browser.action.setBadgeText({ text: '' });
+        throw new Error('Start time or end time is not set');
+      }
+      const remainingTimeInMilliseconds: number = endTime - startTime;
+      const remainingTimeInMinutes: number = convertMillisecondsIntoMinutes(remainingTimeInMilliseconds);
       // Set badge text to remaining time in minutes
       await browser.action.setBadgeText({ text: String(remainingTimeInMinutes) });
 
@@ -219,28 +237,28 @@ export default defineBackground(() => {
     browser.contextMenus.create({
       id: ContextMenuId.MainMenu,
       title: '🍅 Pomodoro',
-      contexts: [ContextMenuContexts.All]
+      contexts: [ContextMenuContexts.All],
     });
 
     browser.contextMenus.create({
       id: ContextMenuId.StartFocus,
       parentId: ContextMenuId.MainMenu,
       title: 'Start focus session',
-      contexts: [ContextMenuContexts.All]
+      contexts: [ContextMenuContexts.All],
     });
 
     browser.contextMenus.create({
       id: ContextMenuId.StartShortBreak,
       parentId: ContextMenuId.MainMenu,
       title: 'Start short break session',
-      contexts: [ContextMenuContexts.All]
+      contexts: [ContextMenuContexts.All],
     });
 
     browser.contextMenus.create({
       id: ContextMenuId.StartLongBreak,
       parentId: ContextMenuId.MainMenu,
       title: 'Start long break session',
-      contexts: [ContextMenuContexts.All]
+      contexts: [ContextMenuContexts.All],
     });
   }
 

@@ -1,4 +1,4 @@
-import { AlarmKeys, StorageKeys } from '@shared/browserKeys';
+import { AlarmKeys, ContextMenuContexts, ContextMenuId, StorageKeys } from '@shared/browserKeys';
 import { DEFAULT_POMODORO_CONFIG } from '@shared/defaults';
 import { DEFAULT_POMODORO_STATE } from '@shared/defaults/defaultPomodoroState';
 import { BackgroundActions, PomodoroStatus } from '@shared/enums';
@@ -217,8 +217,31 @@ export default defineBackground(() => {
 
   function createContextMenu(): void {
     browser.contextMenus.create({
-      id
-    })
+      id: ContextMenuId.MainMenu,
+      title: '🍅 Pomodoro',
+      contexts: [ContextMenuContexts.All]
+    });
+
+    browser.contextMenus.create({
+      id: ContextMenuId.StartFocus,
+      parentId: ContextMenuId.MainMenu,
+      title: 'Start focus session',
+      contexts: [ContextMenuContexts.All]
+    });
+
+    browser.contextMenus.create({
+      id: ContextMenuId.StartShortBreak,
+      parentId: ContextMenuId.MainMenu,
+      title: 'Start short break session',
+      contexts: [ContextMenuContexts.All]
+    });
+
+    browser.contextMenus.create({
+      id: ContextMenuId.StartLongBreak,
+      parentId: ContextMenuId.MainMenu,
+      title: 'Start long break session',
+      contexts: [ContextMenuContexts.All]
+    });
   }
 
   browser.runtime.onInstalled.addListener(async () => {
@@ -243,4 +266,11 @@ export default defineBackground(() => {
         break;
     }
   });
+
+  createContextMenu();
+  
+  (async () => {
+    // Sync badge with current state
+    await updateBadge();
+  })();
 });

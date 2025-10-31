@@ -1,7 +1,7 @@
 import { PomodoroStatus } from '@shared/enums';
 import { PomodoroConfig } from '@shared/interfaces';
 
-export const getSessionDuration = (status: PomodoroStatus, config: PomodoroConfig): number => {
+export const getSessionDurationInMinutes = (status: PomodoroStatus, config: PomodoroConfig): number => {
   switch (status) {
     case PomodoroStatus.Focus:
       return config.focusDuration;

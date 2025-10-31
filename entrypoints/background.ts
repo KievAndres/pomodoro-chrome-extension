@@ -1,9 +1,9 @@
 import { AlarmKeys, StorageKeys } from '@shared/browserKeys';
 import { DEFAULT_POMODORO_CONFIG } from '@shared/defaults';
 import { DEFAULT_POMODORO_STATE } from '@shared/defaults/defaultPomodoroState';
-import { BackgroundActions } from '@shared/enums';
+import { BackgroundActions, PomodoroStatus } from '@shared/enums';
 import { PomodoroConfig, PomodoroState } from '@shared/interfaces';
-import { convertMinutesIntoMilliseconds, getNextPomodoroStatus, getSessionDuration } from '@shared/utils';
+import { convertMinutesIntoMilliseconds, getNextPomodoroStatus, getSessionDurationInMinutes } from '@shared/utils';
 
 export default defineBackground(() => {
   browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
@@ -22,7 +22,7 @@ export default defineBackground(() => {
         return true;
       case BackgroundActions.ClearPomodoroState:
         clearPomodoroState()
-          .then(() => sendResponse({ success: true}))
+          .then(() => sendResponse({ success: true }))
           .catch((error) => sendResponse({ success: false, error: error.message }));
         return true;
       case BackgroundActions.StartNextSession:
@@ -58,13 +58,13 @@ export default defineBackground(() => {
     } catch (error) {
       console.error('Error clearing pomodoro state:', error);
       throw error;
-    } 
+    }
   }
 
   async function savePomodoroConfig(newPomodoroConfig: PomodoroConfig): Promise<void> {
     try {
       await browser.storage.local.set({
-        [StorageKeys.PomodoroConfig]: newPomodoroConfig
+        [StorageKeys.PomodoroConfig]: newPomodoroConfig,
       });
     } catch (error) {
       console.error('Error saving pomodoro config', error);
@@ -91,28 +91,50 @@ export default defineBackground(() => {
     }
   }
 
-  async function startNextSession(): Promise<void> {
+  async function startSession(newPomodoroStatus: PomodoroStatus): Promise<void> {
     try {
-      const pomodoroState: PomodoroState = await getPomodoroState() || DEFAULT_POMODORO_STATE;
-      const pomodoroConfig: PomodoroConfig = await getPomodoroConfig() || DEFAULT_POMODORO_CONFIG;
-
-      const nextPomodoroStatus = getNextPomodoroStatus(pomodoroState.status);
-      const sessionDuration = getSessionDuration(nextPomodoroStatus, pomodoroConfig);
-      const sessionDurationMilliseconds = convertMinutesIntoMilliseconds(sessionDuration);
-      const startTimeMilliseconds = Date.now();
-      const endTimeMilliseconds = startTimeMilliseconds + sessionDurationMilliseconds;
+      const pomodoroState: PomodoroState = (await getPomodoroState()) || DEFAULT_POMODORO_STATE;
+      const pomodoroConfig: PomodoroConfig = (await getPomodoroConfig()) || DEFAULT_POMODORO_CONFIG;
+    
+      const sessionDurationInMinutes: number = getSessionDurationInMinutes(newPomodoroStatus, pomodoroConfig);
+      const sessionDuration: number = convertMinutesIntoMilliseconds(sessionDurationInMinutes);
+      const startTime: number = Date.now();
+      const endTime: number = startTime + sessionDuration;
 
       const newPomodoroState: PomodoroState = {
         ...pomodoroState,
-        status: nextPomodoroStatus,
-        startTime: startTimeMilliseconds,
-        endTime: endTimeMilliseconds,
+        status: newPomodoroStatus,
+        startTime,
+        endTime,
         isRunning: true,
-        remainingTime: undefined
+        remainingTime: undefined,
       };
 
       await savePomodoroState(newPomodoroState);
-      browser.alarms.create(AlarmKeys.PomodoroSessionEnd, { when: endTimeMilliseconds });
+      browser.alarms.create(AlarmKeys.PomodoroSessionEnd, { when: endTime });
+    } catch (error) {
+      console.error('Error starting next session', error);
+      throw error;
+    }
+  }
+
+  async function startNextSession(): Promise<void> {
+    try {
+      const pomodoroState: PomodoroState | null = await getPomodoroState();
+      const pomodoroConfig: PomodoroConfig | null = await getPomodoroConfig();
+  
+      if (!pomodoroState) {
+        throw new Error('No pomodoro state found');
+      }
+      if (!pomodoroConfig) {
+        throw new Error('No pomodoro config found');
+      }
+      const nextPomodoroStatus: PomodoroStatus = getNextPomodoroStatus(
+        pomodoroState.status,
+        pomodoroConfig,
+        pomodoroState.focusCompleted
+      );
+      await startSession(nextPomodoroStatus);
     } catch (error) {
       console.error('Error starting next session', error);
       throw error;
@@ -120,7 +142,43 @@ export default defineBackground(() => {
   }
 
   async function handlePomodoroFinished(): Promise<void> {
-    // const 
+    const pomodoroState: PomodoroState | null = await getPomodoroState();
+    const pomodoroConfig: PomodoroConfig | null = await getPomodoroConfig();
+    if (!pomodoroState) {
+      throw new Error('No pomodoro state found');
+    }
+    if (!pomodoroConfig) {
+      console.error('No pomodoro config found');
+      throw new Error('No pomodoro config found');
+    }
+
+    let focusCompleted: number = pomodoroState.focusCompleted;
+    let cyclesCompleted: number = pomodoroState.cyclesCompleted;
+
+    if (pomodoroState.status === PomodoroStatus.Focus) {
+      focusCompleted++;
+      if (focusCompleted >= pomodoroConfig.focusCompletedUntilLongBreak) {
+        cyclesCompleted++;
+        focusCompleted = 0;
+      }
+    }
+
+    const newPomodoroState: PomodoroState = {
+      ...pomodoroState,
+      focusCompleted,
+      cyclesCompleted
+    };
+    await savePomodoroState(newPomodoroState);
+    showNotification();
+  }
+
+  function showNotification(): void {
+    browser.notifications.create({
+      type: 'basic',
+      title: 'Session end',
+      message: 'Session end',
+      iconUrl: ''
+    })
   }
 
   browser.runtime.onInstalled.addListener(async () => {
@@ -137,5 +195,5 @@ export default defineBackground(() => {
         await handlePomodoroFinished();
       }
     }
-  })
+  });
 });

@@ -5,5 +5,5 @@ export enum BackgroundActions {
   SavePomodoroConfig = 'SAVE_POMODORO_CONFIG',
   GetPomodoroConfig = 'GET_POMODORO_CONFIG',
   ClearPomodoroConfig = 'CLEAR_POMODORO_CONFIG',
-  StartPomodoroSession = 'START_POMODORO'
+  StartSession = 'START_POMODORO'
 }

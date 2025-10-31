@@ -23,8 +23,8 @@ export default defineBackground(() => {
           .then(() => sendResponse({ success: true}))
           .catch((error) => sendResponse({ success: false, error: error.message }));
         return true;
-      case BackgroundActions.StartPomodoroSession:
-        await startPomodoroSession();
+      case BackgroundActions.StartSession:
+        await startSession();
         return true;
     }
   });
@@ -89,11 +89,14 @@ export default defineBackground(() => {
     }
   }
 
-  async function startPomodoroSession(): Promise<void> {
+  async function startSession(): Promise<void> {
     try {
       const pomodoroState: PomodoroState = await getPomodoroState() || DEFAULT_POMODORO_STATE;
+      const pomodoroConfig: PomodoroConfig = await getPomodoroConfig() || DEFAULT_POMODORO_CONFIG;
+
+      const sessionDuration = pomodoroConfig.focusDuration;
       const startTime = Date.now();
-      // const endTime = startTime 
+      const endTime = startTime
     } catch (error) {
       console.error('Error starting pomodoro', error);
     }
@@ -101,6 +104,8 @@ export default defineBackground(() => {
 
   browser.runtime.onInstalled.addListener(async () => {
     const defaultPomodoroConfig: PomodoroConfig = DEFAULT_POMODORO_CONFIG;
+    const defaultPomodoroState: PomodoroState = DEFAULT_POMODORO_STATE;
     await savePomodoroConfig(defaultPomodoroConfig);
+    await savePomodoroState(defaultPomodoroState);
   })
 });

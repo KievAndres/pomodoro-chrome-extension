@@ -267,8 +267,22 @@ export default defineBackground(() => {
     }
   });
 
+  browser.contextMenus.onClicked.addListener(async (contextMenuInfo) => {
+    switch (contextMenuInfo.menuItemId) {
+      case ContextMenuId.StartFocus:
+        await startSession(PomodoroStatus.Focus);
+        break;
+      case ContextMenuId.StartShortBreak:
+        await startSession(PomodoroStatus.ShortBreak);
+        break;
+      case ContextMenuId.StartLongBreak:
+        await startSession(PomodoroStatus.LongBreak);
+        break;
+    }
+  });
+
   createContextMenu();
-  
+
   (async () => {
     // Sync badge with current state
     await updateBadge();

@@ -3,7 +3,7 @@ import { DEFAULT_POMODORO_CONFIG } from '@shared/defaults';
 import { DEFAULT_POMODORO_STATE } from '@shared/defaults/defaultPomodoroState';
 import { BackgroundActions, PomodoroStatus } from '@shared/enums';
 import { PomodoroConfig, PomodoroState } from '@shared/interfaces';
-import { convertMinutesIntoMilliseconds, getNextPomodoroStatus, getSessionDurationInMinutes } from '@shared/utils';
+import { convertMillisecondsIntoMinutes, convertMinutesIntoMilliseconds, getNextPomodoroStatus, getSessionDurationInMinutes } from '@shared/utils';
 
 export default defineBackground(() => {
   browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
@@ -95,7 +95,7 @@ export default defineBackground(() => {
     try {
       const pomodoroState: PomodoroState = (await getPomodoroState()) || DEFAULT_POMODORO_STATE;
       const pomodoroConfig: PomodoroConfig = (await getPomodoroConfig()) || DEFAULT_POMODORO_CONFIG;
-    
+
       const sessionDurationInMinutes: number = getSessionDurationInMinutes(newPomodoroStatus, pomodoroConfig);
       const sessionDuration: number = convertMinutesIntoMilliseconds(sessionDurationInMinutes);
       const startTime: number = Date.now();
@@ -122,7 +122,7 @@ export default defineBackground(() => {
     try {
       const pomodoroState: PomodoroState | null = await getPomodoroState();
       const pomodoroConfig: PomodoroConfig | null = await getPomodoroConfig();
-  
+
       if (!pomodoroState) {
         throw new Error('No pomodoro state found');
       }
@@ -166,7 +166,7 @@ export default defineBackground(() => {
     const newPomodoroState: PomodoroState = {
       ...pomodoroState,
       focusCompleted,
-      cyclesCompleted
+      cyclesCompleted,
     };
     await savePomodoroState(newPomodoroState);
     showNotification();
@@ -177,7 +177,47 @@ export default defineBackground(() => {
       type: 'basic',
       title: 'Session end',
       message: 'Session end',
-      iconUrl: ''
+      iconUrl: '',
+    });
+  }
+
+  async function updateBadge(): Promise<void> {
+    try {
+      const pomodoroState: PomodoroState | null = await getPomodoroState();
+      if (!pomodoroState) {
+        throw new Error('No pomodoro state found');
+      }
+
+      const remainingTime: number = pomodoroState.remainingTime ?? 0;
+      if (!remainingTime) {
+        await browser.action.setBadgeText({ text: '' });
+        throw new Error('Remaining time is not set');
+      }
+      const remainingTimeInMinutes: number = convertMillisecondsIntoMinutes(remainingTime);
+      // Set badge text to remaining time in minutes
+      await browser.action.setBadgeText({ text: String(remainingTimeInMinutes) });
+
+      switch (pomodoroState.status) {
+        case PomodoroStatus.Focus:
+          await browser.action.setBadgeBackgroundColor({ color: '#E95b5b' });
+          break;
+        case PomodoroStatus.ShortBreak:
+        case PomodoroStatus.LongBreak:
+          await browser.action.setBadgeBackgroundColor({ color: '#35bd8f' });
+          break;
+        default:
+          await browser.action.setBadgeBackgroundColor({ color: '#666666' });
+          break;
+      }
+    } catch (error) {
+      console.error('Error updating badge', error);
+      throw error;
+    }
+  }
+
+  function createContextMenu(): void {
+    browser.contextMenus.create({
+      id
     })
   }
 
@@ -188,12 +228,19 @@ export default defineBackground(() => {
     await savePomodoroState(defaultPomodoroState);
   });
 
+  browser.alarms.create(AlarmKeys.PomodoroBadgeRefresh, { periodInMinutes: 1 });
+
   browser.alarms.onAlarm.addListener(async (alarm) => {
-    if (alarm.name === AlarmKeys.PomodoroSessionEnd) {
-      const pomodoroState: PomodoroState | null = await getPomodoroState();
-      if (pomodoroState?.isRunning) {
-        await handlePomodoroFinished();
-      }
+    const pomodoroState: PomodoroState | null = await getPomodoroState();
+    switch (alarm.name) {
+      case AlarmKeys.PomodoroSessionEnd:
+        if (pomodoroState?.isRunning) {
+          await handlePomodoroFinished();
+        }
+        break;
+      case AlarmKeys.PomodoroBadgeRefresh:
+        await updateBadge();
+        break;
     }
   });
 });

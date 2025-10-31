@@ -11,6 +11,16 @@ export default defineBackground(() => {
           })
           .catch((error) => sendResponse({ success: false, error: error.message }));
         return true;
+      case StorageActions.GetPomodoroState:
+        getPomodoroState()
+          .then((pomodoroState) => sendResponse({ success: true, pomodoroState }))
+          .catch((error) => sendResponse({ success: false, error: error.message }));
+        return true;
+      case StorageActions.ClearPomodoroState:
+        clearPomodoroState()
+          .then(() => sendResponse({ success: true}))
+          .catch((error) => sendResponse({ success: false, error: error.message }));
+        return true;
     }
   });
 
@@ -41,6 +51,6 @@ export default defineBackground(() => {
     } catch (error) {
       console.error('Error clearing pomodoro state:', error);
       throw error;
-    }
+    } 
   }
 });

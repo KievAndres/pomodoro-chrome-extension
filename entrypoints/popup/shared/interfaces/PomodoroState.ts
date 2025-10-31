@@ -2,10 +2,12 @@ import { PomodoroStatus } from "@shared/enums";
 
 export interface PomodoroState {
   status: PomodoroStatus;
+  startTime?: number;
+  endTime?: number;
+  isRunning?: boolean;
   remainingTime?: number;
-  duration?: number;
-  completedFocusSessions?: number;
-  completedPomodoroCycles?: number;
-  isPaused?: boolean;
-  previousStatus?: PomodoroStatus;
+
+  // Progress tracking
+  focusCompleted?: number;
+  cyclesCompleted?: number;
 }

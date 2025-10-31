@@ -1,4 +1,5 @@
 import { DEFAULT_POMODORO_CONFIG } from '@shared/defaults';
+import { DEFAULT_POMODORO_STATE } from '@shared/defaults/defaultPomodoroState';
 import { BackgroundActions, StorageKeys } from '@shared/enums';
 import { PomodoroConfig, PomodoroState } from '@shared/interfaces';
 
@@ -90,7 +91,7 @@ export default defineBackground(() => {
 
   async function startPomodoroSession(): Promise<void> {
     try {
-      const pomodoroState: PomodoroState | null= await getPomodoroState();
+      const pomodoroState: PomodoroState = await getPomodoroState() || DEFAULT_POMODORO_STATE;
       const startTime = Date.now();
       // const endTime = startTime 
     } catch (error) {

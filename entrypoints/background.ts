@@ -2,6 +2,7 @@ import { DEFAULT_POMODORO_CONFIG } from '@shared/defaults';
 import { DEFAULT_POMODORO_STATE } from '@shared/defaults/defaultPomodoroState';
 import { BackgroundActions, StorageKeys } from '@shared/enums';
 import { PomodoroConfig, PomodoroState } from '@shared/interfaces';
+import { getNextPomodoroStatus } from '@shared/utils';
 
 export default defineBackground(() => {
   browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
@@ -94,6 +95,7 @@ export default defineBackground(() => {
       const pomodoroState: PomodoroState = await getPomodoroState() || DEFAULT_POMODORO_STATE;
       const pomodoroConfig: PomodoroConfig = await getPomodoroConfig() || DEFAULT_POMODORO_CONFIG;
 
+      const nextPomodoroStatus = getNextPomodoroStatus(pomodoroState.status);
       const sessionDuration = pomodoroConfig.focusDuration;
       const startTime = Date.now();
       const endTime = startTime

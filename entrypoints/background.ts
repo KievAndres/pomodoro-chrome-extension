@@ -183,7 +183,9 @@ export default defineBackground(() => {
       type: 'basic',
       title: 'Session end',
       message: 'Session end',
-      iconUrl: '',
+      iconUrl: browser.runtime.getURL('/icon/128.png'),
+    }).catch((error) => {
+      console.error('Error showing notification:', error);
     });
   }
 

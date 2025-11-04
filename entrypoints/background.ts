@@ -155,14 +155,13 @@ export default defineBackground(() => {
       throw new Error('No pomodoro config found');
     }
 
-    let focusCompleted: number = pomodoroState.focusCompleted;
+    let focusCompleted: number = pomodoroState.focusCompleted % pomodoroConfig.focusCompletedUntilLongBreak;
     let cyclesCompleted: number = pomodoroState.cyclesCompleted;
 
     if (pomodoroState.status === PomodoroStatus.Focus) {
       focusCompleted++;
       if (focusCompleted >= pomodoroConfig.focusCompletedUntilLongBreak) {
         cyclesCompleted++;
-        focusCompleted = 0;
       }
     }
 
@@ -322,7 +321,7 @@ export default defineBackground(() => {
   browser.commands.onCommand.addListener(async (command) => {
     switch (command) {
       case CommandId.StartNextSession:
-        await startNextSession();
+        await startSession(PomodoroStatus.Focus);
         break;
     }
   });

@@ -12,8 +12,8 @@ export default defineConfig({
     commands: {
       'start-next-session': {
         suggested_key: {
-          default: 'Alt+Shift+J',
-          mac: 'Alt+Shift+J'
+          default: 'Alt+Q',
+          mac: 'Alt+Q'
         },
         description: 'Start next Pomodoro session'
       }

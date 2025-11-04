@@ -11,7 +11,7 @@ export const getNextPomodoroStatus = (pomodoroState: PomodoroState, config: Pomo
     case PomodoroStatus.LongBreak:
       return PomodoroStatus.Focus;
     case PomodoroStatus.Focus:
-      if (focusCompleted <= focusCompletedUntilLongBreak) {
+      if (focusCompleted < focusCompletedUntilLongBreak) {
         return PomodoroStatus.ShortBreak;
       }
       return PomodoroStatus.LongBreak;

@@ -9,6 +9,7 @@ import {
   convertMinutesIntoMilliseconds,
   getNextPomodoroStatus,
   getSessionDurationInMinutes,
+  getStatusMessageForNotification,
 } from '@shared/utils';
 
 export default defineBackground(() => {
@@ -184,17 +185,20 @@ export default defineBackground(() => {
       throw new Error('No pomodoro config found');
     }
 
-    const currentPomodoroStatusLabel: string = statusLabelMapper[pomodoroState.status];
+    const { status, focusCompleted } = pomodoroState;
+    const { focusCompletedUntilLongBreak } = pomodoroConfig;
+    const currentPomodoroStatusLabel: string = statusLabelMapper[status];
     const nextPomodoroStatus: PomodoroStatus = getNextPomodoroStatus(pomodoroState, pomodoroConfig);
-    const nextPomodoroStatusLabel: string = statusLabelMapper[nextPomodoroStatus];
+    const nextStatusMessage: string = getStatusMessageForNotification(nextPomodoroStatus);
 
     browser.notifications
       .create({
         type: 'progress',
         title: `${currentPomodoroStatusLabel} session ended`,
-        message: `Click here to start ${nextPomodoroStatusLabel} session`,
+        message: nextStatusMessage,
+        contextMessage: `${focusCompleted} / ${focusCompletedUntilLongBreak} focus sessions completed`,
         iconUrl: browser.runtime.getURL('/icon/128.png'),
-        progress: 25,
+        progress: (100 * focusCompleted) / focusCompletedUntilLongBreak,
       })
       .catch((error) => {
         console.error('Error showing notification:', error);

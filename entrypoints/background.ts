@@ -3,6 +3,7 @@ import { DEFAULT_POMODORO_CONFIG } from '@shared/defaults';
 import { DEFAULT_POMODORO_STATE } from '@shared/defaults/defaultPomodoroState';
 import { BackgroundActions, PomodoroStatus } from '@shared/enums';
 import { PomodoroConfig, PomodoroState } from '@shared/interfaces';
+import { statusLabelMapper } from '@shared/mappers';
 import {
   convertMillisecondsIntoMinutes,
   convertMinutesIntoMilliseconds,
@@ -135,11 +136,7 @@ export default defineBackground(() => {
       if (!pomodoroConfig) {
         throw new Error('No pomodoro config found');
       }
-      const nextPomodoroStatus: PomodoroStatus = getNextPomodoroStatus(
-        pomodoroState.status,
-        pomodoroConfig,
-        pomodoroState.focusCompleted
-      );
+      const nextPomodoroStatus: PomodoroStatus = getNextPomodoroStatus(pomodoroState, pomodoroConfig);
       await startSession(nextPomodoroStatus);
     } catch (error) {
       console.error('Error starting next session', error);
@@ -175,18 +172,33 @@ export default defineBackground(() => {
       cyclesCompleted,
     };
     await savePomodoroState(newPomodoroState);
-    showNotification();
+    await showNotification();
   }
 
-  function showNotification(): void {
-    browser.notifications.create({
-      type: 'basic',
-      title: 'Session end',
-      message: 'Session end',
-      iconUrl: browser.runtime.getURL('/icon/128.png'),
-    }).catch((error) => {
-      console.error('Error showing notification:', error);
-    });
+  async function showNotification(): Promise<void> {
+    const pomodoroState: PomodoroState | null = await getPomodoroState();
+    const pomodoroConfig: PomodoroConfig | null = await getPomodoroConfig();
+
+    if (!pomodoroState) {
+      throw new Error('No pomodoro state found');
+    }
+    if (!pomodoroConfig) {
+      throw new Error('No pomodoro config found');
+    }
+    const currentPomodoroStatusLabel: string = statusLabelMapper[pomodoroState.status];
+    const nextPomodoroStatus: PomodoroStatus = getNextPomodoroStatus(pomodoroState, pomodoroConfig);
+    const nextPomodoroStatusLabel: string = statusLabelMapper[nextPomodoroStatus];
+
+    browser.notifications
+      .create({
+        type: 'basic',
+        title: `${currentPomodoroStatusLabel} session ended`,
+        message: `Click here to start ${nextPomodoroStatusLabel} session`,
+        iconUrl: browser.runtime.getURL('/icon/128.png'),
+      })
+      .catch((error) => {
+        console.error('Error showing notification:', error);
+      });
   }
 
   async function updateBadge(): Promise<void> {

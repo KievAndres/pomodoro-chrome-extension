@@ -222,14 +222,20 @@ export default defineBackground(() => {
         return;
       }
 
-      const startTime: number = pomodoroState.startTime ?? 0;
       const endTime: number = pomodoroState.endTime ?? 0;
-      if (!startTime || !endTime) {
-        await browser.action.setBadgeText({ text: '' });
-        throw new Error('Start time or end time is not set');
+      if (!endTime) {
+        await clearBadge();
+        throw new Error('End time is not set');
       }
-      const remainingTimeInMilliseconds: number = endTime - startTime;
+      const currentTime: number = Date.now();
+      const remainingTimeInMilliseconds: number = Math.max(0, endTime - currentTime);
       const remainingTimeInMinutes: number = convertMillisecondsIntoMinutes(remainingTimeInMilliseconds);
+
+      if (remainingTimeInMinutes <= 0) {
+        await clearBadge();
+        return;
+      }
+      
       // Set badge text to remaining time in minutes
       await browser.action.setBadgeText({ text: String(remainingTimeInMinutes) });
 

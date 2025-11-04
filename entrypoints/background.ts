@@ -136,6 +136,7 @@ export default defineBackground(() => {
       if (!pomodoroConfig) {
         throw new Error('No pomodoro config found');
       }
+      
       const nextPomodoroStatus: PomodoroStatus = getNextPomodoroStatus(pomodoroState, pomodoroConfig);
       await startSession(nextPomodoroStatus);
     } catch (error) {
@@ -172,6 +173,7 @@ export default defineBackground(() => {
       cyclesCompleted,
     };
     await savePomodoroState(newPomodoroState);
+    await clearBadge();
     await showNotification();
   }
 
@@ -245,6 +247,10 @@ export default defineBackground(() => {
       console.error('Error updating badge', error);
       throw error;
     }
+  }
+
+  async function clearBadge(): Promise<void> {
+    await browser.action.setBadgeText({ text: '' })
   }
 
   function createContextMenu(): void {

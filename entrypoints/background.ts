@@ -151,7 +151,6 @@ export default defineBackground(() => {
       throw new Error('No pomodoro state found');
     }
     if (!pomodoroConfig) {
-      console.error('No pomodoro config found');
       throw new Error('No pomodoro config found');
     }
 
@@ -321,7 +320,7 @@ export default defineBackground(() => {
   browser.commands.onCommand.addListener(async (command) => {
     switch (command) {
       case CommandId.StartNextSession:
-        await startSession(PomodoroStatus.Focus);
+        await startNextSession();
         break;
     }
   });

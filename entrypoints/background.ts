@@ -129,14 +129,13 @@ export default defineBackground(() => {
     try {
       const pomodoroState: PomodoroState | null = await getPomodoroState();
       const pomodoroConfig: PomodoroConfig | null = await getPomodoroConfig();
-
       if (!pomodoroState) {
         throw new Error('No pomodoro state found');
       }
       if (!pomodoroConfig) {
         throw new Error('No pomodoro config found');
       }
-      
+
       const nextPomodoroStatus: PomodoroStatus = getNextPomodoroStatus(pomodoroState, pomodoroConfig);
       await startSession(nextPomodoroStatus);
     } catch (error) {
@@ -180,13 +179,13 @@ export default defineBackground(() => {
   async function showNotification(): Promise<void> {
     const pomodoroState: PomodoroState | null = await getPomodoroState();
     const pomodoroConfig: PomodoroConfig | null = await getPomodoroConfig();
-
     if (!pomodoroState) {
       throw new Error('No pomodoro state found');
     }
     if (!pomodoroConfig) {
       throw new Error('No pomodoro config found');
     }
+
     const currentPomodoroStatusLabel: string = statusLabelMapper[pomodoroState.status];
     const nextPomodoroStatus: PomodoroStatus = getNextPomodoroStatus(pomodoroState, pomodoroConfig);
     const nextPomodoroStatusLabel: string = statusLabelMapper[nextPomodoroStatus];

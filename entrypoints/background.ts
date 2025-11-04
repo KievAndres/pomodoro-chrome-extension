@@ -192,10 +192,11 @@ export default defineBackground(() => {
 
     browser.notifications
       .create({
-        type: 'basic',
+        type: 'progress',
         title: `${currentPomodoroStatusLabel} session ended`,
         message: `Click here to start ${nextPomodoroStatusLabel} session`,
         iconUrl: browser.runtime.getURL('/icon/128.png'),
+        progress: 25,
       })
       .catch((error) => {
         console.error('Error showing notification:', error);

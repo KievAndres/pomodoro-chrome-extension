@@ -9,8 +9,8 @@ import {
   convertMinutesIntoMilliseconds,
   getNextPomodoroStatus,
   getSessionDurationInMinutes,
-  getStatusMessageForNotification,
 } from '@shared/utils';
+import { getStatusTitleForNotification, getStatusMessageForNotification } from '@shared/utils/notifications';
 
 export default defineBackground(() => {
   browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
@@ -187,14 +187,14 @@ export default defineBackground(() => {
 
     const { status, focusCompleted } = pomodoroState;
     const { focusCompletedUntilLongBreak } = pomodoroConfig;
-    const currentPomodoroStatusLabel: string = statusLabelMapper[status];
     const nextPomodoroStatus: PomodoroStatus = getNextPomodoroStatus(pomodoroState, pomodoroConfig);
+    const nextStatusTitle: string = getStatusTitleForNotification(status);
     const nextStatusMessage: string = getStatusMessageForNotification(nextPomodoroStatus);
 
     browser.notifications
       .create({
         type: 'progress',
-        title: `${currentPomodoroStatusLabel} session ended`,
+        title: nextStatusTitle,
         message: nextStatusMessage,
         contextMessage: `${focusCompleted} / ${focusCompletedUntilLongBreak} focus sessions completed`,
         iconUrl: browser.runtime.getURL('/icon/128.png'),
@@ -235,7 +235,7 @@ export default defineBackground(() => {
         await clearBadge();
         return;
       }
-      
+
       // Set badge text to remaining time in minutes
       await browser.action.setBadgeText({ text: String(remainingTimeInMinutes) });
 
@@ -297,6 +297,7 @@ export default defineBackground(() => {
     await savePomodoroState(defaultPomodoroState);
   });
 
+  // TODO: Make this alarm only run when a session is running
   browser.alarms.create(AlarmKeys.PomodoroBadgeRefresh, { periodInMinutes: 1 });
 
   browser.alarms.onAlarm.addListener(async (alarm) => {

@@ -8,6 +8,15 @@ export default defineConfig({
     permissions: ['storage', 'alarms', 'contextMenus', 'notifications'],
     action: {
       default_title: 'Pomodoro'
+    },
+    commands: {
+      'start-next-session': {
+        suggested_key: {
+          default: 'Alt+Shift+J',
+          mac: 'Alt+Shift+J'
+        },
+        description: 'Start next Pomodoro session'
+      }
     }
   },
   vite: () => ({

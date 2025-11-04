@@ -1,4 +1,4 @@
-import { AlarmKeys, ContextMenuContexts, ContextMenuId, StorageKeys } from '@shared/browserKeys';
+import { AlarmKeys, CommandId, ContextMenuContexts, ContextMenuId, StorageKeys } from '@shared/browserKeys';
 import { DEFAULT_POMODORO_CONFIG } from '@shared/defaults';
 import { DEFAULT_POMODORO_STATE } from '@shared/defaults/defaultPomodoroState';
 import { BackgroundActions, PomodoroStatus } from '@shared/enums';
@@ -250,7 +250,7 @@ export default defineBackground(() => {
   }
 
   async function clearBadge(): Promise<void> {
-    await browser.action.setBadgeText({ text: '' })
+    await browser.action.setBadgeText({ text: '' });
   }
 
   function createContextMenu(): void {
@@ -315,6 +315,14 @@ export default defineBackground(() => {
         break;
       case ContextMenuId.StartLongBreak:
         await startSession(PomodoroStatus.LongBreak);
+        break;
+    }
+  });
+
+  browser.commands.onCommand.addListener(async (command) => {
+    switch (command) {
+      case CommandId.StartNextSession:
+        await startNextSession();
         break;
     }
   });

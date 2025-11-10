@@ -119,7 +119,8 @@ export default defineBackground(() => {
 
       await savePomodoroState(newPomodoroState);
       await updateBadge();
-      browser.alarms.create(AlarmKeys.PomodoroSessionEnd, { when: endTime });
+      await browser.alarms.create(AlarmKeys.PomodoroBadgeRefresh, { periodInMinutes: 1 });
+      await browser.alarms.create(AlarmKeys.PomodoroSessionEnd, { when: endTime });
     } catch (error) {
       console.error('Error starting next session', error);
       throw error;
@@ -173,6 +174,7 @@ export default defineBackground(() => {
     await savePomodoroState(newPomodoroState);
     await clearBadge();
     await showNotification();
+    await browser.alarms.clear(AlarmKeys.PomodoroBadgeRefresh);
   }
 
   async function showNotification(): Promise<void> {
@@ -296,9 +298,6 @@ export default defineBackground(() => {
     await savePomodoroConfig(defaultPomodoroConfig);
     await savePomodoroState(defaultPomodoroState);
   });
-
-  // TODO: Make this alarm only run when a session is running
-  browser.alarms.create(AlarmKeys.PomodoroBadgeRefresh, { periodInMinutes: 1 });
 
   browser.alarms.onAlarm.addListener(async (alarm) => {
     const pomodoroState: PomodoroState | null = await getPomodoroState();

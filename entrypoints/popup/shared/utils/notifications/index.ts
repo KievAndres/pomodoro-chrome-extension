@@ -1,2 +1,2 @@
-export { getStatusTitleForNotification } from './getStatusTitleForNotification';
-export { getStatusMessageForNotification } from './getStatusMessageForNotification';
+export { getNotificationTitleForStatus } from './getNotificationTitleForStatus';
+export { getNotificationMessageForNextStatus } from './getNotificationMessageForNextStatus';

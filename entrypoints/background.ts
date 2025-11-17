@@ -2,7 +2,7 @@ import { AlarmKeys, CommandId, ContextMenuContexts, ContextMenuId, StorageKeys }
 import { DEFAULT_POMODORO_CONFIG } from '@shared/defaults';
 import { DEFAULT_POMODORO_STATE } from '@shared/defaults/defaultPomodoroState';
 import { BackgroundActions, PomodoroStatus } from '@shared/enums';
-import { PomodoroConfig, PomodoroState } from '@shared/interfaces';
+import { PomodoroConfig, PomodoroState, TabNotificationData } from '@shared/interfaces';
 import { statusLabelMapper } from '@shared/mappers';
 import {
   convertMillisecondsIntoMinutes,
@@ -10,7 +10,7 @@ import {
   getNextPomodoroStatus,
   getSessionDurationInMinutes,
 } from '@shared/utils';
-import { getStatusTitleForNotification, getStatusMessageForNotification } from '@shared/utils/notifications';
+import { getNotificationTitleForStatus, getNotificationMessageForNextStatus } from '@shared/utils/notifications';
 import {
   getStatusCelebrationForTabNotification,
   getStatusMessageForTabNotification,
@@ -95,6 +95,10 @@ export default defineBackground(() => {
 
   async function clearPomodoroConfig(): Promise<void> {
     await clearFromBrowserStorage(StorageKeys.PomodoroConfig);
+  }
+
+  async function saveTabNotificationData(newTabNotificationData: TabNotificationData): Promise<void> {
+    await saveToBrowserStorage(StorageKeys.TabNotificationData, newTabNotificationData);
   }
 
   async function startSession(newPomodoroStatus: PomodoroStatus): Promise<void> {
@@ -189,8 +193,8 @@ export default defineBackground(() => {
 
     const { status, nextStatus, focusCompleted } = pomodoroState;
     const { focusCompletedUntilLongBreak } = pomodoroConfig;
-    const nextStatusTitle: string = getStatusTitleForNotification(status);
-    const nextStatusMessage: string = getStatusMessageForNotification(nextStatus);
+    const nextStatusTitle: string = getNotificationTitleForStatus(status);
+    const nextStatusMessage: string = getNotificationMessageForNextStatus(nextStatus);
 
     browser.notifications
       .create({
@@ -293,12 +297,17 @@ export default defineBackground(() => {
 
   async function openCompletionTab(pomodoroState: PomodoroState): Promise<void> {
     try {
-      const { status, focusCompleted, cyclesCompleted } = pomodoroState;
+      const { status } = pomodoroState;
       const title: string = getStatusTitleForTabNotification(status);
       const message: string = getStatusMessageForTabNotification(status);
       const celebration: string = getStatusCelebrationForTabNotification(status);
 
-      
+      const newTabNotificationData: TabNotificationData = {
+        title,
+        message,
+        celebration,
+      };
+      await saveTabNotificationData(newTabNotificationData);
 
       const htmlUrl = browser.runtime.getURL('/sessionCompleted.html');
       await browser.tabs.create({

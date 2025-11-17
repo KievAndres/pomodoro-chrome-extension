@@ -1,7 +1,7 @@
 import { PomodoroStatus } from "@shared/enums";
 
-export const getStatusMessageForNotification = (status: PomodoroStatus): string => {
-  switch (status) {
+export const getNotificationMessageForNextStatus = (nextStatus: PomodoroStatus): string => {
+  switch (nextStatus) {
     case PomodoroStatus.Focus:
       return `Let's get to work!`;
     case PomodoroStatus.ShortBreak:

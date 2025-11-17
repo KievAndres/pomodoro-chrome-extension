@@ -295,8 +295,18 @@ export default defineBackground(() => {
 
   async function openCompletionTab(pomodoroState: PomodoroState, pomodoroConfig: PomodoroConfig): Promise<void> {
     try {
+      const { status, focusCompleted, cyclesCompleted } = pomodoroState;
+      const nextPomodoroStatus: PomodoroStatus = getNextPomodoroStatus(pomodoroState, pomodoroConfig);
+
+      const statusLabel: string = statusLabelMapper[status];
+      const nextStatusLabel: string = statusLabelMapper[nextPomodoroStatus];
+
       const htmlUrl = browser.runtime.getURL('/sessionCompleted.html');
       const url = new URL(htmlUrl);
+      url.searchParams.set('status', statusLabel);
+      url.searchParams.set('focusCompleted', String(focusCompleted));
+      url.searchParams.set('cyclesCompleted', String(cyclesCompleted))
+      url.searchParams.set('nextStatus', nextStatusLabel);
       await browser.tabs.create({
         url: url.toString(),
         active: true

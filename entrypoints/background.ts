@@ -175,6 +175,7 @@ export default defineBackground(() => {
     await clearBadge();
     await showNotification();
     await browser.alarms.clear(AlarmKeys.PomodoroBadgeRefresh);
+    await openCompletionTab(pomodoroState, pomodoroConfig);
   }
 
   async function showNotification(): Promise<void> {
@@ -290,6 +291,19 @@ export default defineBackground(() => {
       title: 'Start long break session',
       contexts: [ContextMenuContexts.All],
     });
+  }
+
+  async function openCompletionTab(pomodoroState: PomodoroState, pomodoroConfig: PomodoroConfig): Promise<void> {
+    try {
+      const htmlUrl = browser.runtime.getURL('/tab/sessionCompleted/sessionCompleted.html');
+      const url = new URL(htmlUrl);
+      await browser.tabs.create({
+        url: url.toString(),
+        active: true
+      })
+    } catch (error) {
+      console.error('Error opening completion tab', error);
+    }
   }
 
   browser.runtime.onInstalled.addListener(async () => {

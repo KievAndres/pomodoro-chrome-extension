@@ -1,9 +1,11 @@
- /*
+/*
   Josh's Custom CSS Reset
   https://www.joshwcomeau.com/css/custom-css-reset/
 */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -25,28 +27,64 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  background-color: rgba(0, 0, 0, 0.71);
+  background-blend-mode: multiply;
 }
 
-img, picture, video, canvas, svg {
+img,
+picture,
+video,
+canvas,
+svg {
   display: block;
   max-width: 100%;
 }
 
-input, button, textarea, select {
+input,
+button,
+textarea,
+select {
   font: inherit;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   overflow-wrap: break-word;
 }
 
 p {
   text-wrap: pretty;
 }
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   text-wrap: balance;
 }
 
-#root, #__next {
+#root,
+#__next {
   isolation: isolate;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.card {
+  background-color: rgba(255, 255, 255, 0.85);
+  height: 90%;
+  padding: 2em;
+  border-radius: 1em;
 }

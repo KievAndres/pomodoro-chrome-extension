@@ -1,8 +1,9 @@
 import { PomodoroStatus } from '@shared/enums';
 import { PomodoroConfig, PomodoroState } from '@shared/interfaces';
 
-export const getNextPomodoroStatus = (pomodoroState: PomodoroState, config?: PomodoroConfig): PomodoroStatus => {
+export const getNextPomodoroStatus = (pomodoroState: PomodoroState, config: PomodoroConfig): PomodoroStatus => {
   const { focusCompleted, status } = pomodoroState;
+  const { focusCompletedUntilLongBreak } = config;
 
   switch (status) {
     case PomodoroStatus.Idle:
@@ -10,7 +11,7 @@ export const getNextPomodoroStatus = (pomodoroState: PomodoroState, config?: Pom
     case PomodoroStatus.LongBreak:
       return PomodoroStatus.Focus;
     case PomodoroStatus.Focus:
-      if (config && focusCompleted < config.focusCompletedUntilLongBreak) {
+      if (focusCompleted < focusCompletedUntilLongBreak) {
         return PomodoroStatus.ShortBreak;
       }
       return PomodoroStatus.LongBreak;

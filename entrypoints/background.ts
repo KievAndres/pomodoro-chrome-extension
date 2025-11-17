@@ -175,7 +175,7 @@ export default defineBackground(() => {
     await clearBadge();
     await showNotification();
     await browser.alarms.clear(AlarmKeys.PomodoroBadgeRefresh);
-    await openCompletionTab(newPomodoroState, pomodoroConfig);
+    await openCompletionTab();
   }
 
   async function showNotification(): Promise<void> {
@@ -292,19 +292,8 @@ export default defineBackground(() => {
     });
   }
 
-  async function openCompletionTab(pomodoroState: PomodoroState, pomodoroConfig: PomodoroConfig): Promise<void> {
+  async function openCompletionTab(): Promise<void> {
     try {
-      const { status, nextStatus, focusCompleted, cyclesCompleted } = pomodoroState;
-
-      await browser.storage.local.set({
-        'pomodoroTabNotification': {
-          status,
-          focusCompleted,
-          cyclesCompleted,
-          nextStatus,
-        }
-      });
-
       const htmlUrl = browser.runtime.getURL('/sessionCompleted.html');
       await browser.tabs.create({
         url: htmlUrl,

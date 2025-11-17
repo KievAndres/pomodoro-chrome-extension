@@ -43,64 +43,58 @@ export default defineBackground(() => {
     }
   });
 
-  async function savePomodoroState(newPomodoroState: PomodoroState): Promise<void> {
+  async function saveToBrowserStorage(key: StorageKeys, value: any): Promise<void> {
     try {
       await browser.storage.local.set({
-        [StorageKeys.PomodoroState]: newPomodoroState,
+        [key]: value
       });
     } catch (error) {
-      console.error('Error saving pomodoro state:', error);
+      console.error('Error saving to browser storage', `Key: ${key}`, error);
       throw error;
     }
+  }
+
+  async function getFromBrowserStorage<T>(key: StorageKeys): Promise<T | null> {
+    try {
+      const result = await browser.storage.local.get(key);
+      return result[key] as T || null;
+    } catch (error) {
+      console.error('Error getting from browser storage', `Key: ${key}`, error);
+      throw error;
+    }
+  }
+
+  async function clearFromBrowserStorage(key: StorageKeys): Promise<void> {
+    try {
+      await browser.storage.local.remove(key as string);
+    } catch (error) {
+      console.error('Error clearing from browser storage', `Key: ${key}`, error);
+      throw error;
+    }
+  }
+
+  async function savePomodoroState(newPomodoroState: PomodoroState): Promise<void> {
+    await saveToBrowserStorage(StorageKeys.PomodoroState, newPomodoroState);
   }
 
   async function getPomodoroState(): Promise<PomodoroState | null> {
-    try {
-      const result = await browser.storage.local.get(StorageKeys.PomodoroState);
-      return result[StorageKeys.PomodoroState] || null;
-    } catch (error) {
-      console.error('Error getting pomodoro state:', error);
-      throw error;
-    }
+    return await getFromBrowserStorage<PomodoroState>(StorageKeys.PomodoroState);
   }
 
   async function clearPomodoroState(): Promise<void> {
-    try {
-      await browser.storage.local.remove(StorageKeys.PomodoroState as string);
-    } catch (error) {
-      console.error('Error clearing pomodoro state:', error);
-      throw error;
-    }
+    await clearFromBrowserStorage(StorageKeys.PomodoroState);
   }
 
   async function savePomodoroConfig(newPomodoroConfig: PomodoroConfig): Promise<void> {
-    try {
-      await browser.storage.local.set({
-        [StorageKeys.PomodoroConfig]: newPomodoroConfig,
-      });
-    } catch (error) {
-      console.error('Error saving pomodoro config', error);
-      throw error;
-    }
+    await saveToBrowserStorage(StorageKeys.PomodoroConfig, newPomodoroConfig);
   }
 
   async function getPomodoroConfig(): Promise<PomodoroConfig | null> {
-    try {
-      const result = await browser.storage.local.get(StorageKeys.PomodoroConfig);
-      return result[StorageKeys.PomodoroConfig] || null;
-    } catch (error) {
-      console.error('Error getting pomodoro config', error);
-      throw error;
-    }
+    return await getFromBrowserStorage<PomodoroConfig>(StorageKeys.PomodoroConfig);
   }
 
   async function clearPomodoroConfig(): Promise<void> {
-    try {
-      await browser.storage.local.remove(StorageKeys.PomodoroConfig as string);
-    } catch (error) {
-      console.error('Error clearing pomodoro config', error);
-      throw error;
-    }
+    await clearFromBrowserStorage(StorageKeys.PomodoroConfig);
   }
 
   async function startSession(newPomodoroStatus: PomodoroStatus): Promise<void> {

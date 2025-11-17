@@ -295,7 +295,7 @@ export default defineBackground(() => {
 
   async function openCompletionTab(pomodoroState: PomodoroState, pomodoroConfig: PomodoroConfig): Promise<void> {
     try {
-      const htmlUrl = browser.runtime.getURL('/tab/sessionCompleted/sessionCompleted.html');
+      const htmlUrl = browser.runtime.getURL('/sessionCompleted.html');
       const url = new URL(htmlUrl);
       await browser.tabs.create({
         url: url.toString(),

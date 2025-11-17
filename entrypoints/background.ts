@@ -11,6 +11,11 @@ import {
   getSessionDurationInMinutes,
 } from '@shared/utils';
 import { getStatusTitleForNotification, getStatusMessageForNotification } from '@shared/utils/notifications';
+import {
+  getStatusCelebrationForTabNotification,
+  getStatusMessageForTabNotification,
+  getStatusTitleForTabNotification,
+} from '@shared/utils/tabNotifications';
 
 export default defineBackground(() => {
   browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
@@ -175,7 +180,7 @@ export default defineBackground(() => {
     await clearBadge();
     await showNotification();
     await browser.alarms.clear(AlarmKeys.PomodoroBadgeRefresh);
-    await openCompletionTab();
+    await openCompletionTab(newPomodoroState);
   }
 
   async function showNotification(): Promise<void> {
@@ -292,13 +297,20 @@ export default defineBackground(() => {
     });
   }
 
-  async function openCompletionTab(): Promise<void> {
+  async function openCompletionTab(pomodoroState: PomodoroState): Promise<void> {
     try {
+      const { status, focusCompleted, cyclesCompleted } = pomodoroState;
+      const title: string = getStatusTitleForTabNotification(status);
+      const message: string = getStatusMessageForTabNotification(status);
+      const celebration: string = getStatusCelebrationForTabNotification(status);
+
+      
+
       const htmlUrl = browser.runtime.getURL('/sessionCompleted.html');
       await browser.tabs.create({
         url: htmlUrl,
-        active: true
-      })
+        active: true,
+      });
     } catch (error) {
       console.error('Error opening completion tab', error);
     }

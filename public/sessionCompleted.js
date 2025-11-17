@@ -6,16 +6,24 @@
       return;
     }
 
-    const POMODORO_TAB_NOTIFICATION_KEY = 'pomodoroTabNotification';
+    const POMODORO_STATE_KEY = 'pomodoroState';
+    const statusLabelMapper = {
+      ['FOCUS']: 'Focus',
+      ['SHORT_BREAK']: 'Short Break',
+      ['LONG_BREAK']: 'Long Break',
+      ['LONG_BREAK']: 'Idle',
+      ['LONG_BREAK']: 'Paused',
+    }
 
-    const storageResult = await storage.get(POMODORO_TAB_NOTIFICATION_KEY);
-    const pomodoroTabNotification = storageResult[POMODORO_TAB_NOTIFICATION_KEY];
-    if (!pomodoroTabNotification) {
+    const storageResult = await storage.get(POMODORO_STATE_KEY);
+    const pomodoroState = storageResult[POMODORO_STATE_KEY];
+    if (!pomodoroState) {
       console.error('No pomodoro notification data found in storage');
       return;
     }
 
-    const {  } = pomodoroTabNotification;
+    const { status, nextStatus, focusCompleted, cyclesCompleted } = pomodoroState;
+    console.log({ status, nextStatus, focusCompleted, cyclesCompleted });
   } catch (error) {
     console.error('Error reading from storage', error);
   }

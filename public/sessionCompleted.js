@@ -15,8 +15,7 @@
       return;
     }
 
-    console.log({pomodoroTabNotification});
-
+    const {  } = pomodoroTabNotification;
   } catch (error) {
     console.error('Error reading from storage', error);
   }

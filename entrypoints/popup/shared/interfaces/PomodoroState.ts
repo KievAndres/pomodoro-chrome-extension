@@ -6,6 +6,7 @@ export interface PomodoroState {
   startTime?: number;
   endTime?: number;
   remainingTime?: number;
+  nextStatus: PomodoroStatus;
 
   // Progress tracking
   focusCompleted: number;

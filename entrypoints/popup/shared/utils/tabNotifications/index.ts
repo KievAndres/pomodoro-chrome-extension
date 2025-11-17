@@ -1,3 +1,3 @@
-export { getStatusTitleForTabNotification } from './getStatusTitleForTabNotification';
-export { getStatusMessageForTabNotification } from './getStatusMessageForTabNotification';
-export { getStatusCelebrationForTabNotification } from './getStatusCelebrationForTabNotification';
+export { getTabNotificationTitleForStatus } from './getTabNotificationTitleForStatus';
+export { getTabNotificationMessageForState } from './getTabNotificationMessageForState';
+export { getTabNotificationCelebrationForState } from './getTabNotificationCelebrationForState';

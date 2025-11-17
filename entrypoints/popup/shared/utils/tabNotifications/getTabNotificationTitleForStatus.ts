@@ -1,6 +1,6 @@
 import { PomodoroStatus } from "@shared/enums";
 
-export const getStatusTitleForTabNotification = (status: PomodoroStatus): string => {
+export const getTabNotificationTitleForStatus = (status: PomodoroStatus): string => {
   switch (status) {
     case PomodoroStatus.Focus:
       return 'Focus session completed!';

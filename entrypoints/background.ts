@@ -3,7 +3,6 @@ import { DEFAULT_POMODORO_CONFIG } from '@shared/defaults';
 import { DEFAULT_POMODORO_STATE } from '@shared/defaults/defaultPomodoroState';
 import { BackgroundActions, PomodoroStatus } from '@shared/enums';
 import { PomodoroConfig, PomodoroState, TabNotificationData } from '@shared/interfaces';
-import { statusLabelMapper } from '@shared/mappers';
 import {
   convertMillisecondsIntoMinutes,
   convertMinutesIntoMilliseconds,
@@ -12,9 +11,9 @@ import {
 } from '@shared/utils';
 import { getNotificationTitleForStatus, getNotificationMessageForNextStatus } from '@shared/utils/notifications';
 import {
-  getStatusCelebrationForTabNotification,
-  getStatusMessageForTabNotification,
-  getStatusTitleForTabNotification,
+  getTabNotificationCelebrationForState,
+  getTabNotificationMessageForState,
+  getTabNotificationTitleForStatus,
 } from '@shared/utils/tabNotifications';
 
 export default defineBackground(() => {
@@ -297,10 +296,9 @@ export default defineBackground(() => {
 
   async function openCompletionTab(pomodoroState: PomodoroState): Promise<void> {
     try {
-      const { status } = pomodoroState;
-      const title: string = getStatusTitleForTabNotification(status);
-      const message: string = getStatusMessageForTabNotification(status);
-      const celebration: string = getStatusCelebrationForTabNotification(status);
+      const title: string = getTabNotificationTitleForStatus(pomodoroState.status);
+      const message: string = getTabNotificationMessageForState(pomodoroState);
+      const celebration: string = getTabNotificationCelebrationForState(pomodoroState);
 
       const newTabNotificationData: TabNotificationData = {
         title,
